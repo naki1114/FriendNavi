@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:context=".Login">
+
+    <TextView
+        android:id="@+id/loginTitle"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="@string/loginTitle"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/inputID"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+        android:id="@+id/inputID"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:hint="@string/id"
+        android:inputType="text"
+        android:importantForAutofill="no"
+        app:layout_constraintTop_toBottomOf="@id/loginTitle"
+        app:layout_constraintBottom_toTopOf="@id/inputPW"
+        app:layout_constraintLeft_toLeftOf="@id/loginTitle"
+        app:layout_constraintRight_toRightOf="@id/loginTitle" />
+
+    <EditText
+        android:id="@+id/inputPW"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:hint="@string/pw"
+        android:inputType="textPassword"
+        android:importantForAutofill="no"
+        app:layout_constraintTop_toBottomOf="@id/inputID"
+        app:layout_constraintLeft_toLeftOf="@id/inputID"
+        app:layout_constraintRight_toRightOf="@id/inputID" />
+
+    <Button
+        android:id="@+id/btnFNLogin"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="@string/loginTitle"
+        app:layout_constraintTop_toBottomOf="@id/inputPW"
+        app:layout_constraintLeft_toLeftOf="@id/inputPW"
+        app:layout_constraintRight_toRightOf="@id/inputPW" />
+
+    <LinearLayout
+        android:id="@+id/btnGroup"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/btnFNLogin"
+        app:layout_constraintLeft_toLeftOf="@id/btnFNLogin" >
+
+        <Button
+            android:id="@+id/btnFNJoin"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:text="@string/joinTitle"
+            style="?android:attr/buttonBarButtonStyle" />
+
+        <Button
+            android:id="@+id/findID"
+            android:layout_width="110dp"
+            android:layout_height="50dp"
+            android:text="@string/findID"
+            style="?android:attr/buttonBarButtonStyle" />
+
+        <Button
+            android:id="@+id/findPW"
+            android:layout_width="110dp"
+            android:layout_height="50dp"
+            android:text="@string/findPW"
+            style="?android:attr/buttonBarButtonStyle" />
+
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/autoLogin"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:text="@string/autoLogin"
+        app:layout_constraintTop_toBottomOf="@id/btnGroup"
+        app:layout_constraintLeft_toLeftOf="@id/btnGroup" />
+
+    <TextView
+        android:id="@+id/snsLogin"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="@string/sns"
+        app:layout_constraintTop_toBottomOf="@id/autoLogin"
+        app:layout_constraintLeft_toLeftOf="@id/autoLogin" />
+
+    <LinearLayout
+        android:id="@+id/snsGroup"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/snsLogin"
+        app:layout_constraintLeft_toLeftOf="@id/snsLogin"
+        app:layout_constraintRight_toRightOf="@id/snsLogin" >
+
+        <Button
+            android:id="@+id/btnNaver"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:text="N" />
+
+        <Button
+            android:id="@+id/btnKakao"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginLeft="45dp"
+            android:layout_marginRight="45dp"
+            android:text="K" />
+
+        <Button
+            android:id="@+id/btnGoogle"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:text="G" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
