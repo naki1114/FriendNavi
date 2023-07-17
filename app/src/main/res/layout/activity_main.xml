@@ -16,9 +16,12 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:background="@drawable/custom_search"
-        android:hint="검색"
+        android:hint="@string/search"
         android:layout_margin="30dp"
-        android:paddingLeft="20dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="0dp"
+        android:inputType="text"
+        android:importantForAutofill="no"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
