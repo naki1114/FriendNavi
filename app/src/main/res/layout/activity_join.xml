@@ -7,7 +7,7 @@
     tools:context=".Join">
 
     <TextView
-        android:id="@+id/appTitle"
+        android:id="@+id/joinTitle"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:text="@string/joinTitle"
@@ -24,10 +24,10 @@
         android:hint="@string/id"
         android:inputType="text"
         android:importantForAutofill="no"
-        app:layout_constraintTop_toBottomOf="@id/appTitle"
+        app:layout_constraintTop_toBottomOf="@id/joinTitle"
         app:layout_constraintBottom_toTopOf="@id/inputNickname"
-        app:layout_constraintLeft_toLeftOf="@id/appTitle"
-        app:layout_constraintRight_toRightOf="@id/appTitle" />
+        app:layout_constraintLeft_toLeftOf="@id/joinTitle"
+        app:layout_constraintRight_toRightOf="@id/joinTitle" />
 
     <EditText
         android:id="@+id/inputNickname"
