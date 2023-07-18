@@ -111,7 +111,7 @@
             android:id="@+id/btnNaver"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:text="N" />
+            android:text="@string/naver" />
 
         <Button
             android:id="@+id/btnKakao"
@@ -119,13 +119,13 @@
             android:layout_height="70dp"
             android:layout_marginLeft="45dp"
             android:layout_marginRight="45dp"
-            android:text="K" />
+            android:text="@string/kakao" />
 
         <Button
             android:id="@+id/btnGoogle"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:text="G" />
+            android:text="@string/google" />
 
     </LinearLayout>
 
