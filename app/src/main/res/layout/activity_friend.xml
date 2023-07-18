@@ -33,9 +33,10 @@
         android:id="@+id/searchFriend"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:src="@drawable/search"
         android:layout_marginRight="10dp"
         android:scaleType="fitCenter"
-        android:background="@color/black"
+        android:background="@color/white"
         android:contentDescription="@string/btn"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toLeftOf="@id/addFriend" />
@@ -44,8 +45,9 @@
         android:id="@+id/addFriend"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:src="@drawable/talk"
         android:scaleType="fitCenter"
-        android:background="@color/black"
+        android:background="@color/white"
         android:contentDescription="@string/btn"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
