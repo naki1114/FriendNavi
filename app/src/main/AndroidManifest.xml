@@ -11,6 +11,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FriendNavi"
         tools:targetApi="31">
+        <activity
+            android:name=".MyInfo"
+            android:exported="false" />
+        <activity
+            android:name=".Location"
+            android:exported="false" />
+        <activity
+            android:name=".ChatRoom"
+            android:exported="false" />
+        <activity
+            android:name=".ChatList"
+            android:exported="false" />
+        <activity
+            android:name=".Friend"
+            android:exported="false" />
+        <activity
+            android:name=".Favorite"
+            android:exported="false" />
+        <activity
+            android:name=".Login"
+            android:exported="false" />
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
@@ -19,7 +40,6 @@
         <activity
             android:name=".Join"
             android:exported="false" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -29,7 +49,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
