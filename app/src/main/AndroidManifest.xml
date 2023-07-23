@@ -11,44 +11,58 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FriendNavi"
         tools:targetApi="31">
-        <activity
-            android:name=".MyInfo"
-            android:exported="false" />
-        <activity
-            android:name=".Location"
-            android:exported="false" />
-        <activity
-            android:name=".ChatRoom"
-            android:exported="false" />
-        <activity
-            android:name=".ChatList"
-            android:exported="false" />
-        <activity
-            android:name=".Friend"
-            android:exported="false" />
-        <activity
-            android:name=".Favorite"
-            android:exported="false" />
-        <activity
-            android:name=".Login"
-            android:exported="false" />
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="686nr3uji6" />
 
         <activity
+            android:name=".MyInfo"
+            android:exported="false" />
+
+        <activity
+            android:name=".Location"
+            android:exported="false" />
+
+        <activity
+            android:name=".ChatRoom"
+            android:exported="false" />
+
+        <activity
+            android:name=".ChatList"
+            android:exported="false" />
+
+        <activity
+            android:name=".Friend"
+            android:exported="false" />
+
+        <activity
+            android:name=".Favorite"
+            android:exported="false" />
+
+        <activity
+            android:name=".Login"
+            android:exported="false" />
+
+        <activity
             android:name=".Join"
             android:exported="false" />
+
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
