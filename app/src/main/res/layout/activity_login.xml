@@ -46,6 +46,8 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:text="@string/loginTitle"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/theme"
         app:layout_constraintTop_toBottomOf="@id/inputPW"
         app:layout_constraintLeft_toLeftOf="@id/inputPW"
         app:layout_constraintRight_toRightOf="@id/inputPW" />
@@ -59,21 +61,21 @@
         app:layout_constraintLeft_toLeftOf="@id/btnFNLogin" >
 
         <Button
-            android:id="@+id/btnFNJoin"
+            android:id="@+id/btnJoin"
             android:layout_width="80dp"
             android:layout_height="50dp"
             android:text="@string/joinTitle"
             style="?android:attr/buttonBarButtonStyle" />
 
         <Button
-            android:id="@+id/findID"
+            android:id="@+id/btnFindID"
             android:layout_width="110dp"
             android:layout_height="50dp"
             android:text="@string/findID"
             style="?android:attr/buttonBarButtonStyle" />
 
         <Button
-            android:id="@+id/findPW"
+            android:id="@+id/btnFindPW"
             android:layout_width="110dp"
             android:layout_height="50dp"
             android:text="@string/findPW"
