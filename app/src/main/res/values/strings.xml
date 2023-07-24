@@ -1,7 +1,7 @@
 <resources>
 
     <!--공 통-->
-    <string name="app_name">FriendNavi</string>
+    <string name="app_name">프렌드 내비</string>
     <string name="confirm">확 인</string>
     <string name="cancel">취 소</string>
     <string name="search">검 색</string>
