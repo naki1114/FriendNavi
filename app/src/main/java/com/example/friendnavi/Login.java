@@ -2,17 +2,24 @@ package com.example.friendnavi;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 public class Login extends AppCompatActivity {
 
     String TAG = "로그인 페이지";
 
+    Button btnJoin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        initializing();
     }
 
     @Override
@@ -25,6 +32,15 @@ public class Login extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.v(TAG, "onResume 호출");
+
+        btnJoin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent toJoinActivity = new Intent(getApplicationContext(), Join.class);
+                startActivity(toJoinActivity);
+                finish();
+            }
+        });
     }
 
     @Override
@@ -49,6 +65,14 @@ public class Login extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.v(TAG, "onDestroy 호출");
+    }
+
+    // Custom Method
+
+    public void initializing() {
+
+        btnJoin = findViewById(R.id.btnJoin);
+
     }
 
 }
