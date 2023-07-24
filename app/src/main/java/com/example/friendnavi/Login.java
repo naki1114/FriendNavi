@@ -18,6 +18,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Log.v(TAG, "onCreate 호출");
 
         initializing();
     }
@@ -36,9 +37,7 @@ public class Login extends AppCompatActivity {
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent toJoinActivity = new Intent(getApplicationContext(), Join.class);
-                startActivity(toJoinActivity);
-                finish();
+                toJoin();
             }
         });
     }
@@ -73,6 +72,12 @@ public class Login extends AppCompatActivity {
 
         btnJoin = findViewById(R.id.btnJoin);
 
+    }
+
+    public void toJoin() {
+        Intent toJoinActivity = new Intent(getApplicationContext(), Join.class);
+        startActivity(toJoinActivity);
+        finish();
     }
 
 }
