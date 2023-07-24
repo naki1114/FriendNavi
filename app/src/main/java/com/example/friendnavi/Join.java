@@ -2,18 +2,26 @@ package com.example.friendnavi;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 public class Join extends AppCompatActivity {
 
     String TAG = "회원가입 페이지";
+
+    Button btnConfirm;
+    Button btnCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
         Log.v(TAG, "onCreate 호출");
+
+        initializing();
     }
 
     @Override
@@ -26,6 +34,20 @@ public class Join extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.v(TAG, "onResume 호출");
+
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                confirmJoin();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancelJoin();
+            }
+        });
     }
 
     @Override
@@ -50,6 +72,25 @@ public class Join extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.v(TAG, "onDestroy 호출");
+    }
+
+    // Custom Method
+
+    public void initializing() {
+        btnConfirm = findViewById(R.id.btnConfirm);
+        btnCancel = findViewById(R.id.btnCancel);
+    }
+
+    public void confirmJoin() {
+        Intent toLoginConfirm = new Intent(getApplicationContext(), Login.class);
+        startActivity(toLoginConfirm);
+        finish();
+    }
+
+    public void cancelJoin() {
+        Intent toLoginCancel = new Intent(getApplicationContext(), Login.class);
+        startActivity(toLoginCancel);
+        finish();
     }
 
 }
