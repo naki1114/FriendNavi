@@ -9,12 +9,12 @@
     <string name="pw">비 밀 번 호</string>
     <string name="pwRe">비 밀 번 호 재 입 력</string>
     <string name="nickname">닉 네 임</string>
-    <string name="name">이 름</string>
     <string name="phone">휴 대 폰 번 호</string>
     <string name="addHome">주 소 ( 집 )</string>
     <string name="addCom">주 소 ( 회 사 )</string>
-    <string name="mail">이 메 일</string>
     <string name="btn">버 튼</string>
+    <string name="duplicationCheck">중 복 검 사</string>
+    <string name="duplicationMessage">중복 검사를 해주세요.</string>
 
     <!--회 원 가 입-->
     <string name="joinTitle">회원 가입</string>
