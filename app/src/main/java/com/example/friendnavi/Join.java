@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -65,6 +67,33 @@ public class Join extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.v(TAG, "onResume 호출");
+
+        inputPhone.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // 입력난에 변화가 있을 시 조치
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // 입력이 끝났을 때 조치
+                if (inputPhone.getText().toString().length() == 3) {
+                    inputPhone.setText(inputPhone.getText().toString() + "-");
+                    inputPhone.setSelection(inputPhone.getText().length());
+                }
+                else if (inputPhone.getText().toString().length() == 8) {
+                    inputPhone.setText(inputPhone.getText().toString() + "-");
+                    inputPhone.setSelection(inputPhone.getText().length());
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // 입력하기 전에 조치
+            }
+
+        });
 
         btnCheckID.setOnClickListener(new View.OnClickListener() {
             @Override
