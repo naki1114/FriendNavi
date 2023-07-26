@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import retrofit2.Call;
@@ -26,23 +27,24 @@ public class Join extends AppCompatActivity {
     EditText inputAddHome;
     EditText inputAddComp;
 
+    TextView checkIDView;
+    TextView checkNicknameView;
+
+    Button btnCheckID;
+    Button btnCheckNickname;
+
     Button btnConfirm;
     Button btnCancel;
 
-    UserInfo transUserInfo;
+    ServiceAPI transUserInfo;
 
     String getID;
     String getNickname;
     String getPW;
     String getPWRe;
-    String getName;
-    String getBirth;
     String getPhone;
     String getAddHome;
     String getAddComp;
-    String getEmail;
-
-    int check = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,22 @@ public class Join extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.v(TAG, "onResume 호출");
+
+        btnCheckID.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setJoinData();
+                duplicationCheckID(getID);
+            }
+        });
+
+        btnCheckNickname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setJoinData();
+                duplicationCheckNickname(getNickname);
+            }
+        });
 
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,16 +133,62 @@ public class Join extends AppCompatActivity {
         inputAddHome = findViewById(R.id.inputAddressHome);
         inputAddComp = findViewById(R.id.inputAddressCompany);
 
+        checkIDView = findViewById(R.id.checkIDView);
+        checkNicknameView = findViewById(R.id.checkNicknameView);
+
+        btnCheckID = findViewById(R.id.btnCheckID);
+        btnCheckNickname = findViewById(R.id.btnCheckNickname);
+
         btnConfirm = findViewById(R.id.btnConfirm);
         btnCancel = findViewById(R.id.btnCancel);
 
-        transUserInfo = RetrofitClient.getClient().create(UserInfo.class);
+        transUserInfo = RetrofitClient.getClient().create(ServiceAPI.class);
     }
 
     public void toLogin() {
         Intent toLoginActivity = new Intent(getApplicationContext(), Login.class);
         startActivity(toLoginActivity);
         finish();
+    }
+
+    private void duplicationCheckID(String id) {
+        transUserInfo.checkID(id).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                String result = response.body();
+                Toast.makeText(Join.this, result, Toast.LENGTH_SHORT).show();
+                if(result.equals("사용 가능한 아이디입니다.")) {
+                    // 사용 가능할 때
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(Join.this, "Sign up Error", Toast.LENGTH_SHORT).show();
+                Log.e("Sign up Error", t.getMessage());
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void duplicationCheckNickname(String nickname) {
+        transUserInfo.checkNickname(nickname).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                String result = response.body();
+                Toast.makeText(Join.this, result, Toast.LENGTH_SHORT).show();
+                if(result.equals("사용 가능한 닉네임입니다.")) {
+                    // 사용 가능할 때
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(Join.this, "Sign up Error", Toast.LENGTH_SHORT).show();
+                Log.e("Sign up Error", t.getMessage());
+                t.printStackTrace();
+            }
+        });
     }
 
     public void setJoinData() {
@@ -142,7 +206,6 @@ public class Join extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 String result = response.body();
-                Log.v("확인",result);
                 Toast.makeText(Join.this, result, Toast.LENGTH_SHORT).show();
                 if(result.equals("회원가입이 완료되었습니다.")) {
                     toLogin();

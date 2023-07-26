@@ -5,11 +5,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
-public interface UserInfo {
-
-//    @FormUrlEncoded
-//    @POST("login.php")
-//    Call<LoginResponse> userLogin(@Body LoginData data);
+public interface ServiceAPI {
 
     @FormUrlEncoded
     @POST("join.php")
@@ -20,5 +16,18 @@ public interface UserInfo {
                           @Field("phone") String phone,
                           @Field("addHome") String addHome,
                           @Field("addComp") String addComp);
+
+    @FormUrlEncoded
+    @POST("checkid.php")
+    Call<String> checkID(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("checknick.php")
+    Call<String> checkNickname(@Field("nickname") String nickname);
+
+    @FormUrlEncoded
+    @POST("login.php")
+    Call<String> userLogin(@Field("id") String id,
+                           @Field("password") String password);
 
 }
