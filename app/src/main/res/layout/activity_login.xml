@@ -42,7 +42,7 @@
         app:layout_constraintRight_toRightOf="@id/inputID" />
 
     <Button
-        android:id="@+id/btnFNLogin"
+        android:id="@+id/btnLogin"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:text="@string/loginTitle"
@@ -57,8 +57,8 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/btnFNLogin"
-        app:layout_constraintLeft_toLeftOf="@id/btnFNLogin" >
+        app:layout_constraintTop_toBottomOf="@id/btnLogin"
+        app:layout_constraintLeft_toLeftOf="@id/btnLogin" >
 
         <Button
             android:id="@+id/btnJoin"
@@ -111,22 +111,25 @@
 
         <Button
             android:id="@+id/btnNaver"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:text="@string/naver" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnKakao"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginLeft="45dp"
-            android:layout_marginRight="45dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="75dp"
+            android:layout_marginRight="75dp"
+            android:src="@drawable/kakaologo"
+            android:scaleType="fitCenter"
+            android:background="@color/white"
             android:text="@string/kakao" />
 
         <Button
             android:id="@+id/btnGoogle"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:text="@string/google" />
 
     </LinearLayout>
