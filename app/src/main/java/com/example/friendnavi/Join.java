@@ -3,6 +3,7 @@ package com.example.friendnavi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -47,6 +48,9 @@ public class Join extends AppCompatActivity {
     String getPhone;
     String getAddHome;
     String getAddComp;
+
+    String msgCheckID;
+    String msgCheckPW;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,9 +189,13 @@ public class Join extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 String result = response.body();
+                checkIDView.setText(result);
                 Toast.makeText(Join.this, result, Toast.LENGTH_SHORT).show();
-                if(result.equals("사용 가능한 아이디입니다.")) {
-                    // 사용 가능할 때
+                if(result.equals("사용 가능한 아이디 입니다.")) {
+                    checkIDView.setTextColor(Color.parseColor("#0000FF"));
+                }
+                else {
+                    checkIDView.setTextColor(Color.parseColor("#FF0000"));
                 }
             }
 
@@ -205,9 +213,13 @@ public class Join extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 String result = response.body();
+                checkNicknameView.setText(result);
                 Toast.makeText(Join.this, result, Toast.LENGTH_SHORT).show();
-                if(result.equals("사용 가능한 닉네임입니다.")) {
-                    // 사용 가능할 때
+                if(result.equals("사용 가능한 닉네임 입니다.")) {
+                    checkNicknameView.setTextColor(Color.parseColor("#0000FF"));
+                }
+                else {
+                    checkNicknameView.setTextColor(Color.parseColor("#FF0000"));
                 }
             }
 
