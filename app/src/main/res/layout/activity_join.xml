@@ -21,6 +21,7 @@
         android:id="@+id/inputID"
         android:layout_width="250dp"
         android:layout_height="50dp"
+        android:layout_marginTop="20dp"
         android:hint="@string/id"
         android:inputType="text"
         android:importantForAutofill="no"
@@ -28,14 +29,25 @@
         app:layout_constraintLeft_toLeftOf="@id/joinTitle"
         app:layout_constraintRight_toRightOf="@id/joinTitle" />
 
+    <TextView
+        android:id="@+id/checkIDView"
+        android:layout_width="250dp"
+        android:layout_height="20dp"
+        android:gravity="top"
+        android:text="@string/idCheck"
+        android:textSize="10sp"
+        app:layout_constraintTop_toBottomOf="@id/inputID"
+        app:layout_constraintLeft_toLeftOf="@id/inputID"
+        app:layout_constraintRight_toRightOf="@id/inputID" />
+
     <LinearLayout
         android:id="@+id/duplicationCheckID"
         android:layout_width="250dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/inputID"
-        app:layout_constraintLeft_toLeftOf="@id/inputID"
-        app:layout_constraintRight_toRightOf="@id/inputID" >
+        app:layout_constraintTop_toBottomOf="@id/checkIDView"
+        app:layout_constraintLeft_toLeftOf="@id/checkIDView"
+        app:layout_constraintRight_toRightOf="@id/checkIDView" >
 
         <Button
             android:id="@+id/btnCheckID"
@@ -47,7 +59,7 @@
             android:backgroundTint="@color/theme" />
 
         <TextView
-            android:id="@+id/checkIDView"
+            android:id="@+id/duplicationCheckIDView"
             android:layout_width="140dp"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
@@ -69,14 +81,25 @@
         app:layout_constraintLeft_toLeftOf="@id/inputID"
         app:layout_constraintRight_toRightOf="@id/inputID" />
 
+    <TextView
+        android:id="@+id/checkNicknameView"
+        android:layout_width="250dp"
+        android:layout_height="20dp"
+        android:gravity="top"
+        android:text="@string/nicknameCheck"
+        android:textSize="10sp"
+        app:layout_constraintTop_toBottomOf="@id/inputNickname"
+        app:layout_constraintLeft_toLeftOf="@id/inputNickname"
+        app:layout_constraintRight_toRightOf="@id/inputNickname" />
+
     <LinearLayout
         android:id="@+id/duplicationCheckNickname"
         android:layout_width="250dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/inputNickname"
-        app:layout_constraintLeft_toLeftOf="@id/inputNickname"
-        app:layout_constraintRight_toRightOf="@id/inputNickname" >
+        app:layout_constraintTop_toBottomOf="@id/checkNicknameView"
+        app:layout_constraintLeft_toLeftOf="@id/checkNicknameView"
+        app:layout_constraintRight_toRightOf="@id/checkNicknameView" >
 
         <Button
             android:id="@+id/btnCheckNickname"
@@ -88,7 +111,7 @@
             android:backgroundTint="@color/theme" />
 
         <TextView
-            android:id="@+id/checkNicknameView"
+            android:id="@+id/duplicationCheckNicknameView"
             android:layout_width="140dp"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
@@ -102,25 +125,49 @@
         android:id="@+id/inputPW"
         android:layout_width="250dp"
         android:layout_height="50dp"
+        android:layout_marginTop="20dp"
         android:hint="@string/pw"
         android:inputType="textPassword"
         android:importantForAutofill="no"
         app:layout_constraintTop_toBottomOf="@id/duplicationCheckNickname"
-        app:layout_constraintBottom_toTopOf="@id/inputPWRe"
-        app:layout_constraintLeft_toLeftOf="@id/inputNickname"
-        app:layout_constraintRight_toRightOf="@id/inputNickname" />
+        app:layout_constraintBottom_toTopOf="@id/checkPasswordView"
+        app:layout_constraintLeft_toLeftOf="@id/duplicationCheckNickname"
+        app:layout_constraintRight_toRightOf="@id/duplicationCheckNickname" />
+
+    <TextView
+        android:id="@+id/checkPasswordView"
+        android:layout_width="250dp"
+        android:layout_height="20dp"
+        android:gravity="top"
+        android:text="@string/passwordCheck"
+        android:textSize="10sp"
+        app:layout_constraintTop_toBottomOf="@id/inputPW"
+        app:layout_constraintLeft_toLeftOf="@id/inputPW"
+        app:layout_constraintRight_toRightOf="@id/inputPW" />
 
     <EditText
         android:id="@+id/inputPWRe"
         android:layout_width="250dp"
         android:layout_height="50dp"
+        android:layout_marginTop="20dp"
         android:hint="@string/pwRe"
         android:inputType="textPassword"
         android:importantForAutofill="no"
-        app:layout_constraintTop_toBottomOf="@id/inputPW"
-        app:layout_constraintBottom_toTopOf="@id/inputPhone"
-        app:layout_constraintLeft_toLeftOf="@id/inputPW"
-        app:layout_constraintRight_toRightOf="@id/inputPW" />
+        app:layout_constraintTop_toBottomOf="@id/checkPasswordView"
+        app:layout_constraintBottom_toTopOf="@id/checkPasswordReView"
+        app:layout_constraintLeft_toLeftOf="@id/checkPasswordView"
+        app:layout_constraintRight_toRightOf="@id/checkPasswordView" />
+
+    <TextView
+        android:id="@+id/checkPasswordReView"
+        android:layout_width="250dp"
+        android:layout_height="20dp"
+        android:gravity="top"
+        android:text="@string/passwordReCheck"
+        android:textSize="10sp"
+        app:layout_constraintTop_toBottomOf="@id/inputPWRe"
+        app:layout_constraintLeft_toLeftOf="@id/inputPWRe"
+        app:layout_constraintRight_toRightOf="@id/inputPWRe" />
 
     <EditText
         android:id="@+id/inputPhone"
@@ -129,10 +176,10 @@
         android:hint="@string/phone"
         android:inputType="phone"
         android:importantForAutofill="no"
-        app:layout_constraintTop_toBottomOf="@id/inputPWRe"
+        app:layout_constraintTop_toBottomOf="@id/checkPasswordReView"
         app:layout_constraintBottom_toTopOf="@id/inputAddressHome"
-        app:layout_constraintLeft_toLeftOf="@id/inputPWRe"
-        app:layout_constraintRight_toRightOf="@id/inputPWRe" />
+        app:layout_constraintLeft_toLeftOf="@id/checkPasswordReView"
+        app:layout_constraintRight_toRightOf="@id/checkPasswordReView" />
 
     <EditText
         android:id="@+id/inputAddressHome"

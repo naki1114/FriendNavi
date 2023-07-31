@@ -18,6 +18,10 @@
 
     <!--회 원 가 입-->
     <string name="joinTitle">회원 가입</string>
+    <string name="idCheck">영문, 숫자 혼합 6 ~ 16자</string>
+    <string name="nicknameCheck">2 ~ 10자</string>
+    <string name="passwordCheck">영문, 숫자, 특수문자 혼합 8 ~ 16자</string>
+    <string name="passwordReCheck">비밀번호 일치 확인</string>
 
     <!--로 그 인-->
     <string name="loginTitle">로 그 인</string>

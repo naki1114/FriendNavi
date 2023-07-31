@@ -2,6 +2,9 @@ package com.example.friendnavi;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -32,6 +35,11 @@ public class Join extends AppCompatActivity {
 
     TextView checkIDView;
     TextView checkNicknameView;
+    TextView checkPasswordView;
+    TextView checkPasswordReView;
+
+    TextView duplicationCheckIDView;
+    TextView duplicationCheckNicknameView;
 
     Button btnCheckID;
     Button btnCheckNickname;
@@ -72,16 +80,121 @@ public class Join extends AppCompatActivity {
         super.onResume();
         Log.v(TAG, "onResume 호출");
 
+        inputID.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                duplicationCheckIDView.setTextColor(Color.parseColor("#FF0000"));
+                duplicationCheckIDView.setText("중복 검사를 해주세요.");
+
+                if (checkID(inputID.getText().toString()) == true) {
+                    checkIDView.setTextColor(Color.parseColor("#0000FF"));
+                }
+                else {
+                    checkIDView.setTextColor(Color.parseColor("#FF0000"));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        inputNickname.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                duplicationCheckNicknameView.setTextColor(Color.parseColor("#FF0000"));
+                duplicationCheckNicknameView.setText("중복 검사를 해주세요.");
+
+                if (checkNickname(inputNickname.getText().toString()) == true) {
+                    checkNicknameView.setTextColor(Color.parseColor("#0000FF"));
+                }
+                else {
+                    checkNicknameView.setTextColor(Color.parseColor("#FF0000"));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        inputPW.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (inputPWRe.getText().toString().equals(inputPW.getText().toString())) {
+                    checkPasswordReView.setTextColor(Color.parseColor("#0000FF"));
+                }
+                else {
+                    checkPasswordReView.setTextColor(Color.parseColor("#FF0000"));
+                }
+
+                if (checkPW(inputPW.getText().toString()) == true) {
+                    checkPasswordView.setTextColor(Color.parseColor("#0000FF"));
+                }
+                else {
+                    checkPasswordView.setTextColor(Color.parseColor("#FF0000"));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        inputPWRe.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (inputPWRe.getText().toString().equals(inputPW.getText().toString())) {
+                    checkPasswordReView.setTextColor(Color.parseColor("#0000FF"));
+                }
+                else {
+                    checkPasswordReView.setTextColor(Color.parseColor("#FF0000"));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         inputPhone.addTextChangedListener(new TextWatcher() {
 
             @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // 입력난에 변화가 있을 시 조치
+
             }
 
             @Override
             public void afterTextChanged(Editable arg0) {
-                // 입력이 끝났을 때 조치
                 if (inputPhone.getText().toString().length() == 3) {
                     inputPhone.setText(inputPhone.getText().toString() + "-");
                     inputPhone.setSelection(inputPhone.getText().length());
@@ -90,11 +203,6 @@ public class Join extends AppCompatActivity {
                     inputPhone.setText(inputPhone.getText().toString() + "-");
                     inputPhone.setSelection(inputPhone.getText().length());
                 }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // 입력하기 전에 조치
             }
 
         });
@@ -168,6 +276,11 @@ public class Join extends AppCompatActivity {
 
         checkIDView = findViewById(R.id.checkIDView);
         checkNicknameView = findViewById(R.id.checkNicknameView);
+        checkPasswordView = findViewById(R.id.checkPasswordView);
+        checkPasswordReView = findViewById(R.id.checkPasswordReView);
+
+        duplicationCheckIDView = findViewById(R.id.duplicationCheckIDView);
+        duplicationCheckNicknameView = findViewById(R.id.duplicationCheckNicknameView);
 
         btnCheckID = findViewById(R.id.btnCheckID);
         btnCheckNickname = findViewById(R.id.btnCheckNickname);
@@ -189,13 +302,13 @@ public class Join extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 String result = response.body();
-                checkIDView.setText(result);
+                duplicationCheckIDView.setText(result);
                 Toast.makeText(Join.this, result, Toast.LENGTH_SHORT).show();
                 if(result.equals("사용 가능한 아이디 입니다.")) {
-                    checkIDView.setTextColor(Color.parseColor("#0000FF"));
+                    duplicationCheckIDView.setTextColor(Color.parseColor("#0000FF"));
                 }
                 else {
-                    checkIDView.setTextColor(Color.parseColor("#FF0000"));
+                    duplicationCheckIDView.setTextColor(Color.parseColor("#FF0000"));
                 }
             }
 
@@ -213,13 +326,13 @@ public class Join extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 String result = response.body();
-                checkNicknameView.setText(result);
+                duplicationCheckNicknameView.setText(result);
                 Toast.makeText(Join.this, result, Toast.LENGTH_SHORT).show();
                 if(result.equals("사용 가능한 닉네임 입니다.")) {
-                    checkNicknameView.setTextColor(Color.parseColor("#0000FF"));
+                    duplicationCheckNicknameView.setTextColor(Color.parseColor("#0000FF"));
                 }
                 else {
-                    checkNicknameView.setTextColor(Color.parseColor("#FF0000"));
+                    duplicationCheckNicknameView.setTextColor(Color.parseColor("#FF0000"));
                 }
             }
 
@@ -230,6 +343,32 @@ public class Join extends AppCompatActivity {
                 t.printStackTrace();
             }
         });
+    }
+
+    private static boolean checkID(String id){
+        String pattern = "^[a-zA-Z0-9]{6,16}$";
+
+        return Pattern.matches(pattern, id);
+    }
+
+    private static boolean checkNickname(String nickname){
+        String pattern1 = "^[a-zA-Z]{2,10}$";
+        String pattern2 = "^[a-zA-Z0-9]{2,10}$";
+        String pattern3 = "^[가-힣]{2,10}$";
+        String pattern4 = "^[가-힣0-9]{2,10}$";
+
+        if (Pattern.matches(pattern1, nickname) == true || Pattern.matches(pattern2, nickname) == true || Pattern.matches(pattern3, nickname) == true || Pattern.matches(pattern4, nickname) == true) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private static boolean checkPW(String pw){
+        String pattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{8,16}$";
+
+        return Pattern.matches(pattern, pw);
     }
 
     public void setJoinData() {
