@@ -11,6 +11,7 @@
         android:id="@+id/loginTitle"
         android:layout_width="300dp"
         android:layout_height="50dp"
+        android:layout_marginTop="150dp"
         android:text="@string/loginTitle"
         android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"

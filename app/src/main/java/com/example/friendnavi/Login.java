@@ -180,9 +180,9 @@ public class Login extends AppCompatActivity {
             @Override
             public Unit invoke(User user, Throwable throwable) {
                 if (user != null) {
-                    Log.d(TAG, "invoke: id" + user.getId());
-                    Log.d(TAG, "invoke: nickname" + user.getKakaoAccount().getProfile().getNickname());
-                    Log.d(TAG, "invoke: profile" + user.getKakaoAccount().getProfile().getProfileImageUrl());
+                    Log.d(TAG, "id : " + user.getId());
+                    Log.d(TAG, "nickname : " + user.getKakaoAccount().getProfile().getNickname());
+                    Log.d(TAG, "profile : " + user.getKakaoAccount().getProfile().getProfileImageUrl());
                 }
                 else {
                     Log.d(TAG, "로그인이 되어있지 않습니다.");
