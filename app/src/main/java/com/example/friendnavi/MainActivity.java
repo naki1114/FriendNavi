@@ -1,23 +1,24 @@
 package com.example.friendnavi;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
-import com.naver.maps.geometry.LatLng;
-import com.naver.maps.map.CameraPosition;
-import com.naver.maps.map.MapView;
-import com.naver.maps.map.NaverMap;
-import com.naver.maps.map.OnMapReadyCallback;
-
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity {
 
     String TAG = "메인 페이지";
 
-    private MapView mapView;
-    private static NaverMap naverMap;
+    private FragmentManager fragmentManager;
+    private FragmentTransaction transaction;
+
+    private Navigation fragNavi;
+    private Friend fragFriend;
+    private Chatting fragChatting;
+    private Profile fragProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
         Log.v(TAG, "onCreate 호출");
 
-        setMapView(savedInstanceState);
+        initFragment();
     }
 
     @Override
@@ -66,23 +67,39 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Custom Method
 
-    public void setMapView(Bundle bundle) {
-        //네이버 지도
-        mapView = (MapView) findViewById(R.id.naverMap);
-        mapView.onCreate(bundle);
-        mapView.getMapAsync(this);
+    public void initFragment() {
+
+        fragmentManager = getSupportFragmentManager();
+
+        fragNavi = new Navigation();
+        fragFriend = new Friend();
+        fragChatting = new Chatting();
+        fragProfile = new Profile();
+
+        transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragmentLayout, fragNavi).commitAllowingStateLoss();
+
     }
 
-    @Override
-    public void onMapReady(@NonNull NaverMap naverMap)
+    public void choiceFragment(View view)
     {
-        this.naverMap = naverMap;
+        transaction = fragmentManager.beginTransaction();
 
-        CameraPosition cameraPosition = new CameraPosition(
-                new LatLng(37.27175, 127.01395),  // 위치 지정
-                9                           // 줌 레벨
-        );
-        naverMap.setCameraPosition(cameraPosition);
+        switch(view.getId())
+        {
+            case R.id.btnHome:
+                transaction.replace(R.id.fragmentLayout, fragNavi).commitAllowingStateLoss();
+                break;
+            case R.id.btnFriend:
+                transaction.replace(R.id.fragmentLayout, fragFriend).commitAllowingStateLoss();
+                break;
+            case R.id.btnChatting:
+                transaction.replace(R.id.fragmentLayout, fragChatting).commitAllowingStateLoss();
+                break;
+            case R.id.btnProfile:
+                transaction.replace(R.id.fragmentLayout, fragProfile).commitAllowingStateLoss();
+                break;
+        }
     }
 
 }
