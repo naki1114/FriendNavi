@@ -11,9 +11,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class Navigation extends Fragment {
+import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.CameraPosition;
+import com.naver.maps.map.MapView;
+import com.naver.maps.map.NaverMap;
+import com.naver.maps.map.OnMapReadyCallback;
+
+public class Navigation extends Fragment implements OnMapReadyCallback {
 
     String TAG = "F_네비게이션";
+
+    private MapView mapView;
+    private static NaverMap naverMap;
 
     @Override
     public void onAttach(Context context) {
@@ -30,7 +39,11 @@ public class Navigation extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.v(TAG, "onCreateView()");
-        return inflater.inflate(R.layout.fragment_navigation, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_navigation, container, false);
+        setMapView(savedInstanceState, view);
+
+        return view;
     }
 
     @Override
@@ -90,6 +103,27 @@ public class Navigation extends Fragment {
     public void onDetach() {
         super.onDetach();
         Log.v(TAG, "onDetach()");
+    }
+
+    // Custom Method
+
+    public void setMapView(Bundle bundle, View view) {
+        //네이버 지도
+        mapView = view.findViewById(R.id.naverMap);
+        mapView.onCreate(bundle);
+        mapView.getMapAsync(this);
+    }
+
+    @Override
+    public void onMapReady(@NonNull NaverMap naverMap)
+    {
+        this.naverMap = naverMap;
+
+        CameraPosition cameraPosition = new CameraPosition(
+                new LatLng(37.27175, 127.01395),  // 위치 지정
+                9                           // 줌 레벨
+        );
+        naverMap.setCameraPosition(cameraPosition);
     }
 
 }
