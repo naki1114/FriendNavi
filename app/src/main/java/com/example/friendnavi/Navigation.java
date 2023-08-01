@@ -11,9 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class Friend extends Fragment {
+public class Navigation extends Fragment {
 
-    String TAG = "F_친구";
+    String TAG = "F_네비게이션";
 
     @Override
     public void onAttach(Context context) {
@@ -30,7 +30,7 @@ public class Friend extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.v(TAG, "onCreateView()");
-        return inflater.inflate(R.layout.fragment_friend, container, false);
+        return inflater.inflate(R.layout.fragment_navigation, container, false);
     }
 
     @Override
