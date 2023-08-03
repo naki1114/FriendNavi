@@ -57,8 +57,8 @@ public class Join extends AppCompatActivity {
     String getAddHome;
     String getAddComp;
 
-    String msgCheckID;
-    String msgCheckPW;
+    int confirmID = 0;
+    int confirmNickname = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +97,7 @@ public class Join extends AppCompatActivity {
                 else {
                     checkIDView.setTextColor(Color.parseColor("#FF0000"));
                 }
+                confirmID = 0;
             }
 
             @Override
@@ -122,6 +123,7 @@ public class Join extends AppCompatActivity {
                 else {
                     checkNicknameView.setTextColor(Color.parseColor("#FF0000"));
                 }
+                confirmNickname = 0;
             }
 
             @Override
@@ -226,8 +228,13 @@ public class Join extends AppCompatActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setJoinData();
-                startJoin(getID, getNickname, getPW, getPWRe, getPhone, getAddHome, getAddComp);
+                if (confirmID == 1 && confirmNickname == 1) {
+                    setJoinData();
+                    startJoin(getID, getNickname, getPW, getPWRe, getPhone, getAddHome, getAddComp);
+                }
+                else {
+                    Toast.makeText(Join.this, "중복 검사를 확인 해주세요.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -306,6 +313,7 @@ public class Join extends AppCompatActivity {
                 Toast.makeText(Join.this, result, Toast.LENGTH_SHORT).show();
                 if(result.equals("사용 가능한 아이디 입니다.")) {
                     duplicationCheckIDView.setTextColor(Color.parseColor("#0000FF"));
+                    confirmID = 1;
                 }
                 else {
                     duplicationCheckIDView.setTextColor(Color.parseColor("#FF0000"));
@@ -330,6 +338,7 @@ public class Join extends AppCompatActivity {
                 Toast.makeText(Join.this, result, Toast.LENGTH_SHORT).show();
                 if(result.equals("사용 가능한 닉네임 입니다.")) {
                     duplicationCheckNicknameView.setTextColor(Color.parseColor("#0000FF"));
+                    confirmNickname = 1;
                 }
                 else {
                     duplicationCheckNicknameView.setTextColor(Color.parseColor("#FF0000"));
