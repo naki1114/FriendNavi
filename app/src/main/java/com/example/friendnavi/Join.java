@@ -30,8 +30,6 @@ public class Join extends AppCompatActivity {
     EditText inputPW;
     EditText inputPWRe;
     EditText inputPhone;
-    EditText inputAddHome;
-    EditText inputAddComp;
 
     TextView checkIDView;
     TextView checkNicknameView;
@@ -54,8 +52,6 @@ public class Join extends AppCompatActivity {
     String getPW;
     String getPWRe;
     String getPhone;
-    String getAddHome;
-    String getAddComp;
 
     int confirmID = 0;
     int confirmNickname = 0;
@@ -230,7 +226,7 @@ public class Join extends AppCompatActivity {
             public void onClick(View view) {
                 if (confirmID == 1 && confirmNickname == 1) {
                     setJoinData();
-                    startJoin(getID, getNickname, getPW, getPWRe, getPhone, getAddHome, getAddComp);
+                    startJoin(getID, getNickname, getPW, getPWRe, getPhone);
                 }
                 else {
                     Toast.makeText(Join.this, "중복 검사를 확인 해주세요.", Toast.LENGTH_SHORT).show();
@@ -278,8 +274,6 @@ public class Join extends AppCompatActivity {
         inputPW = findViewById(R.id.inputPW);
         inputPWRe = findViewById(R.id.inputPWRe);
         inputPhone = findViewById(R.id.inputPhone);
-        inputAddHome = findViewById(R.id.inputAddressHome);
-        inputAddComp = findViewById(R.id.inputAddressCompany);
 
         checkIDView = findViewById(R.id.checkIDView);
         checkNicknameView = findViewById(R.id.checkNicknameView);
@@ -386,12 +380,10 @@ public class Join extends AppCompatActivity {
         getPW = inputPW.getText().toString();
         getPWRe = inputPWRe.getText().toString();
         getPhone = inputPhone.getText().toString();
-        getAddHome = inputAddHome.getText().toString();
-        getAddComp = inputAddComp.getText().toString();
     }
 
-    private void startJoin(String id, String nickname, String password, String passwordRe, String phone, String addHome, String addComp) {
-        transUserInfo.userJoin(id, nickname, password, passwordRe, phone, addHome, addComp).enqueue(new Callback<String>() {
+    private void startJoin(String id, String nickname, String password, String passwordRe, String phone) {
+        transUserInfo.userJoin(id, nickname, password, passwordRe, phone).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 String result = response.body();

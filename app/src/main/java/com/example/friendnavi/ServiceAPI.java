@@ -13,9 +13,7 @@ public interface ServiceAPI {
                           @Field("nickname") String nickname,
                           @Field("password") String password,
                           @Field("passwordRe") String passwordRe,
-                          @Field("phone") String phone,
-                          @Field("addHome") String addHome,
-                          @Field("addComp") String addComp);
+                          @Field("phone") String phone);
 
     @FormUrlEncoded
     @POST("checkid.php")

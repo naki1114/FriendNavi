@@ -177,43 +177,19 @@
         android:inputType="phone"
         android:importantForAutofill="no"
         app:layout_constraintTop_toBottomOf="@id/checkPasswordReView"
-        app:layout_constraintBottom_toTopOf="@id/inputAddressHome"
+        app:layout_constraintBottom_toTopOf="@id/btnJoin"
         app:layout_constraintLeft_toLeftOf="@id/checkPasswordReView"
         app:layout_constraintRight_toRightOf="@id/checkPasswordReView" />
-
-    <EditText
-        android:id="@+id/inputAddressHome"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:hint="@string/addHome"
-        android:inputType="text"
-        android:importantForAutofill="no"
-        app:layout_constraintTop_toBottomOf="@id/inputPhone"
-        app:layout_constraintBottom_toTopOf="@id/inputAddressCompany"
-        app:layout_constraintLeft_toLeftOf="@id/inputPhone"
-        app:layout_constraintRight_toRightOf="@id/inputPhone" />
-
-    <EditText
-        android:id="@+id/inputAddressCompany"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:hint="@string/addCom"
-        android:inputType="text"
-        android:importantForAutofill="no"
-        app:layout_constraintTop_toBottomOf="@id/inputAddressHome"
-        app:layout_constraintBottom_toTopOf="@id/btnJoin"
-        app:layout_constraintLeft_toLeftOf="@id/inputAddressHome"
-        app:layout_constraintRight_toRightOf="@id/inputAddressHome" />
 
     <LinearLayout
         android:id="@+id/btnJoin"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/inputAddressCompany"
+        app:layout_constraintTop_toBottomOf="@id/inputPhone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/inputAddressCompany"
-        app:layout_constraintRight_toRightOf="@id/inputAddressCompany" >
+        app:layout_constraintLeft_toLeftOf="@id/inputPhone"
+        app:layout_constraintRight_toRightOf="@id/inputPhone" >
 
         <Button
             android:id="@+id/btnConfirm"
