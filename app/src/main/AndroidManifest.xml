@@ -24,64 +24,61 @@
             android:value="686nr3uji6" />
 
         <activity
-            android:name=".LaunchActivity"
-            android:exported="true" >
+            android:name=".Destination"
+            android:exported="false" />
+        <activity
+            android:name=".Search"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysVisible" />
 
+        <activity
+            android:name=".LaunchActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
         <activity
             android:name=".Profile"
             android:exported="false" />
-
         <activity
             android:name=".Location"
             android:exported="false" />
-
         <activity
             android:name=".ChatRoom"
             android:exported="false" />
-
         <activity
             android:name=".Chatting"
             android:exported="false" />
-
         <activity
             android:name=".Friend"
             android:exported="false" />
-
         <activity
             android:name=".Favorite"
             android:exported="false" />
-
         <activity
             android:name=".Login"
             android:exported="false" />
-
         <activity
             android:name=".Join"
             android:exported="false" />
-
         <activity
             android:name=".SplashActivity"
             android:exported="true"
             android:theme="@style/SplashTheme">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
@@ -97,7 +94,6 @@
                     android:scheme="kakao{bb9f33eee95b151908e9f6bcc005c322}" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
