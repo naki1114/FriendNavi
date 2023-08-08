@@ -4,11 +4,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class RetrofitForUser {
+public class UserClient {
     private final static String BASE_URL = "http://13.125.189.5/";
     private static Retrofit retrofit = null;
 
-    private RetrofitForUser() {
+    private UserClient() {
     }
 
     public static Retrofit getClient() {

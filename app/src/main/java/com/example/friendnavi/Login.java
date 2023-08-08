@@ -132,7 +132,7 @@ public class Login extends AppCompatActivity {
 
         btnKakao = findViewById(R.id.btnKakao);
 
-        transUserInfo = RetrofitForUser.getClient().create(ServiceAPI.class);
+        transUserInfo = UserClient.getClient().create(ServiceAPI.class);
     }
 
     public void toJoin() {
