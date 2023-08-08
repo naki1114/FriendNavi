@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kakao.sdk.auth.model.OAuthToken;
-import com.kakao.sdk.common.KakaoSdk;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.User;
 
@@ -133,7 +132,7 @@ public class Login extends AppCompatActivity {
 
         btnKakao = findViewById(R.id.btnKakao);
 
-        transUserInfo = RetrofitClient.getClient().create(ServiceAPI.class);
+        transUserInfo = RetrofitForUser.getClient().create(ServiceAPI.class);
     }
 
     public void toJoin() {

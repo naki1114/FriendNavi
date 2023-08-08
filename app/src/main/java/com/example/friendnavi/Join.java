@@ -2,7 +2,6 @@ package com.example.friendnavi;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Intent;
@@ -289,7 +288,7 @@ public class Join extends AppCompatActivity {
         btnConfirm = findViewById(R.id.btnConfirm);
         btnCancel = findViewById(R.id.btnCancel);
 
-        transUserInfo = RetrofitClient.getClient().create(ServiceAPI.class);
+        transUserInfo = RetrofitForUser.getClient().create(ServiceAPI.class);
     }
 
     public void toLogin() {
