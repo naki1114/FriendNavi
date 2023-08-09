@@ -1,6 +1,9 @@
 package com.example.friendnavi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,22 +11,37 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Search extends AppCompatActivity {
 
     String TAG = "검색 페이지";
 
+    ServiceAPI naverSearch;
+
     EditText search;
+
+    RecyclerView searchListView;
+    private ArrayList<ItemSearch> searchList;
+    private SearchAdapter searchAdapter;
+
+    String[] searchResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +49,7 @@ public class Search extends AppCompatActivity {
         setContentView(R.layout.activity_search);
 
         initView();
+        initRetrofit();
     }
 
     @Override
@@ -45,6 +64,23 @@ public class Search extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.v(TAG, "onResume 호출");
+
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                getResult();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -95,6 +131,10 @@ public class Search extends AppCompatActivity {
         search = findViewById(R.id.search);
     }
 
+    public void initRetrofit() {
+        naverSearch = RetrofitClient.getClient().create(ServiceAPI.class);
+    }
+
     public static Location findGeoPoint(Context context, String address) {
         Location loc = new Location("");
         Geocoder coder = new Geocoder(context);
@@ -116,6 +156,69 @@ public class Search extends AppCompatActivity {
             }
         }
         return loc;
+    }
+
+    public void getResult() {
+
+        String placeSearch = "";
+
+        try {
+            placeSearch = URLEncoder.encode(search.getText().toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e1) {
+            e1.printStackTrace();
+        }
+
+        naverSearch.getSearchResult(placeSearch).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                searchResult = response.body().split("<br>");
+                Log.v(TAG, "" + searchResult.length);
+                for (int i = 0; i < searchResult.length; i++) {
+                    Log.v(TAG, "" + searchResult[i].replaceAll("<b>", "").replaceAll("</b>", ""));
+                }
+                initSearchResultList();
+                setSearchResult();
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(Search.this, "Sign up Error", Toast.LENGTH_SHORT).show();
+                Log.e("Sign up Error", t.getMessage());
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void initSearchResultList() {
+        searchListView = (RecyclerView) findViewById(R.id.searchListView);
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
+        searchListView.setLayoutManager(mLinearLayoutManager);
+
+        searchList = new ArrayList<>();
+
+        searchAdapter = new SearchAdapter(searchList);
+        searchListView.setAdapter(searchAdapter);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(searchListView.getContext(), mLinearLayoutManager.getOrientation());
+        searchListView.addItemDecoration(dividerItemDecoration);
+    }
+
+    public void setSearchResult() {
+        for (int i = 0; i < searchResult.length - 2; i+=3) {
+            String searchName = searchResult[i + 1].replaceAll("<b>", "").replaceAll("</b>", "");
+            String searchAddress = searchResult[i + 2].replaceAll("<b>", "").replaceAll("</b>", "");
+
+            if (searchName.length() >= 30) {
+                searchName = searchName.substring(0, 30) + "...";
+            }
+            if (searchAddress.length() >= 30) {
+                searchAddress = searchAddress.substring(0, 30) + "...";
+            }
+
+            ItemSearch itemSearch = new ItemSearch(searchName, searchAddress);
+            searchList.add(itemSearch);
+        }
+        searchAdapter.notifyDataSetChanged();
     }
 
 }

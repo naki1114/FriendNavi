@@ -55,4 +55,8 @@
     <!--유저 정보-->
     <string name="myInfoTitle">나키 님</string>
 
+    <!--검색 아이템-->
+    <string name="searchName">상호명</string>
+    <string name="searchAddress">주소</string>
+
 </resources>

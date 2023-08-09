@@ -1,9 +1,12 @@
 package com.example.friendnavi;
 
+import java.util.HashMap;
+
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface ServiceAPI {
 
@@ -27,5 +30,9 @@ public interface ServiceAPI {
     @POST("login.php")
     Call<String> userLogin(@Field("id") String id,
                            @Field("password") String password);
+
+    @FormUrlEncoded
+    @POST("search.php")
+    Call<String> getSearchResult(@Field("query") String query);
 
 }
