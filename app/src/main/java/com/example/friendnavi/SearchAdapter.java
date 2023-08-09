@@ -1,5 +1,8 @@
 package com.example.friendnavi;
 
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +21,19 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         protected TextView name;
         protected TextView address;
 
-        public SearchViewHolder(View view) {
+        public SearchViewHolder(Context context, View view) {
             super(view);
             this.name = view.findViewById(R.id.name);
             this.address = view.findViewById(R.id.address);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent toDestination = new Intent(context, Destination.class);
+                    toDestination.putExtra("destination", address.getText().toString());
+                    context.startActivity(toDestination);
+                }
+            });
         }
     }
 
@@ -32,8 +44,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     @Override
     public SearchViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
+        Context context = viewGroup.getContext();
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_search, viewGroup, false);
-        SearchViewHolder viewHolder = new SearchViewHolder(view);
+        SearchViewHolder viewHolder = new SearchViewHolder(context, view);
 
         return viewHolder;
     }
