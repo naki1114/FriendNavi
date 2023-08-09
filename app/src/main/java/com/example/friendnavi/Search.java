@@ -47,6 +47,7 @@ public class Search extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        Log.v(TAG, "onCreate 호출");
 
         initView();
         initRetrofit();
@@ -172,10 +173,6 @@ public class Search extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 searchResult = response.body().split("<br>");
-                Log.v(TAG, "" + searchResult.length);
-                for (int i = 0; i < searchResult.length; i++) {
-                    Log.v(TAG, "" + searchResult[i].replaceAll("<b>", "").replaceAll("</b>", ""));
-                }
                 initSearchResultList();
                 setSearchResult();
             }
@@ -198,9 +195,6 @@ public class Search extends AppCompatActivity {
 
         searchAdapter = new SearchAdapter(searchList);
         searchListView.setAdapter(searchAdapter);
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(searchListView.getContext(), mLinearLayoutManager.getOrientation());
-        searchListView.addItemDecoration(dividerItemDecoration);
     }
 
     public void setSearchResult() {
@@ -208,8 +202,8 @@ public class Search extends AppCompatActivity {
             String searchName = searchResult[i + 1].replaceAll("<b>", "").replaceAll("</b>", "");
             String searchAddress = searchResult[i + 2].replaceAll("<b>", "").replaceAll("</b>", "");
 
-            if (searchName.length() >= 30) {
-                searchName = searchName.substring(0, 30) + "...";
+            if (searchName.length() >= 15) {
+                searchName = searchName.substring(0, 15) + "...";
             }
             if (searchAddress.length() >= 30) {
                 searchAddress = searchAddress.substring(0, 30) + "...";
