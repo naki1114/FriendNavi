@@ -28,7 +28,7 @@
             android:id="@+id/btnHome"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/backbutton"
+            android:src="@drawable/home"
             android:scaleType="fitCenter"
             android:background="@color/white"
             android:onClick="choiceFragment" />
@@ -42,7 +42,7 @@
             android:id="@+id/btnFriend"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/backbutton"
+            android:src="@drawable/friend"
             android:scaleType="fitCenter"
             android:background="@color/white"
             android:onClick="choiceFragment" />
@@ -56,7 +56,7 @@
             android:id="@+id/btnChatting"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/backbutton"
+            android:src="@drawable/chatting"
             android:scaleType="fitCenter"
             android:background="@color/white"
             android:onClick="choiceFragment" />
@@ -70,7 +70,7 @@
             android:id="@+id/btnProfile"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/backbutton"
+            android:src="@drawable/my"
             android:scaleType="fitCenter"
             android:background="@color/white"
             android:onClick="choiceFragment" />
