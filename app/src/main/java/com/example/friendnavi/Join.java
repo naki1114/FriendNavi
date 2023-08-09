@@ -288,7 +288,7 @@ public class Join extends AppCompatActivity {
         btnConfirm = findViewById(R.id.btnConfirm);
         btnCancel = findViewById(R.id.btnCancel);
 
-        transUserInfo = UserClient.getClient().create(ServiceAPI.class);
+        transUserInfo = RetrofitClient.getClient().create(ServiceAPI.class);
     }
 
     public void toLogin() {
