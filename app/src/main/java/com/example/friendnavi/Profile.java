@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 
 public class Profile extends Fragment {
 
-    String TAG = "F_프로필";
+    String TAG = "F_프로필 페이지";
 
     @Override
     public void onAttach(Context context) {

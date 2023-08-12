@@ -1,14 +1,23 @@
 package com.example.friendnavi;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.PointF;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.naver.maps.geometry.LatLng;
@@ -16,18 +25,26 @@ import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.overlay.LocationOverlay;
+import com.naver.maps.map.overlay.OverlayImage;
 
 public class Navigation extends Fragment implements OnMapReadyCallback {
 
-    String TAG = "F_네비게이션";
+    String TAG = "F_네비게이션 페이지";
 
     private MapView mapView;
     private static NaverMap naverMap;
+
+    Context context;
+
+    EditText search;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.v(TAG, "onAttach()");
+
+        this.context = context;
     }
 
     @Override
@@ -42,6 +59,8 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
 
         View view = inflater.inflate(R.layout.fragment_navigation, container, false);
         setMapView(savedInstanceState, view);
+
+        initView(view);
 
         return view;
     }
@@ -67,6 +86,15 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
         Log.v(TAG, "onResume()");
+
+        search.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Intent intent = new Intent(context, Search.class);
+                startActivity(intent);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -107,6 +135,10 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
 
     // Custom Method
 
+    public void initView(View view) {
+        search = view.findViewById(R.id.search);
+    }
+
     public void setMapView(Bundle bundle, View view) {
         //네이버 지도
         mapView = view.findViewById(R.id.naverMap);
@@ -115,15 +147,33 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onMapReady(@NonNull NaverMap naverMap)
-    {
+    public void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
 
-        CameraPosition cameraPosition = new CameraPosition(
-                new LatLng(37.27175, 127.01395),  // 위치 지정
-                9                           // 줌 레벨
-        );
+        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        Location currentLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+//        Location currentLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        double lat = currentLocation.getLatitude();
+        double lng = currentLocation.getLongitude();
+
+        // 에이블디 위도(Latitude) : 37.27175, 경도(Longitude) : 127.01395
+        CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng),16);
         naverMap.setCameraPosition(cameraPosition);
+
+        LocationOverlay locationOverlay = naverMap.getLocationOverlay();
+        locationOverlay.setVisible(true);
+        locationOverlay.setPosition(new LatLng(lat, lng));
+        locationOverlay.setBearing(0);
+        locationOverlay.setSubIcon(OverlayImage.fromResource(R.drawable.pointer));
+        locationOverlay.setSubIconWidth(50);
+        locationOverlay.setSubIconHeight(50);
+        locationOverlay.setSubAnchor(new PointF(0.5f, 1));
+
     }
 
 }

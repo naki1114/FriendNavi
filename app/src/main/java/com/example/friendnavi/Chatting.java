@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 
 public class Chatting extends Fragment {
 
-    String TAG = "F_채팅";
+    String TAG = "F_채팅 페이지";
 
     @Override
     public void onAttach(Context context) {

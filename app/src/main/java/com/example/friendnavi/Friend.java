@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 
 public class Friend extends Fragment {
 
-    String TAG = "F_친구";
+    String TAG = "F_친구 페이지";
 
     @Override
     public void onAttach(Context context) {
