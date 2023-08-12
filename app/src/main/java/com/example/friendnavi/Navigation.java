@@ -90,9 +90,11 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
         search.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                Intent intent = new Intent(context, Search.class);
-                startActivity(intent);
-                return false;
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    Intent intent = new Intent(context, Search.class);
+                    startActivity(intent);
+                }
+                return true;
             }
         });
     }
