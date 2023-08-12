@@ -179,7 +179,7 @@ public class Login extends AppCompatActivity {
             @Override
             public Unit invoke(User user, Throwable throwable) {
                 if (user != null) {
-                    Log.d(TAG, "id : " + user.getId());
+                    Log.d(TAG, "id : " + user.getKakaoAccount().getEmail());
                     Log.d(TAG, "nickname : " + user.getKakaoAccount().getProfile().getNickname());
                     Log.d(TAG, "profile : " + user.getKakaoAccount().getProfile().getProfileImageUrl());
                 }
