@@ -59,4 +59,8 @@
     <string name="searchName">상호명</string>
     <string name="searchAddress">주소</string>
 
+    <!--사용자 정보-->
+    <string name="logout">로 그 아 웃</string>
+    <string name="withdraw">회 원 탈 퇴</string>
+
 </resources>

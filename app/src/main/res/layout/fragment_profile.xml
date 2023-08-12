@@ -29,11 +29,30 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="450dp"
         android:layout_marginTop="15dp"
         android:text="차 량 정 보"
         app:layout_constraintTop_toBottomOf="@id/profile"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:backgroundTint="@color/theme"
+        android:text="@string/logout"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <Button
+        android:id="@+id/btnWithdraw"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:backgroundTint="#FFFF0000"
+        android:text="@string/withdraw"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
