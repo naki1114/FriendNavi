@@ -2,13 +2,17 @@ package com.example.friendnavi;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -18,10 +22,16 @@ import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.OverlayImage;
 
 import java.io.IOException;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Destination extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -30,7 +40,18 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
     private MapView mapView;
     private static NaverMap naverMap;
 
+    LocationManager lm;
+    Location currentLocation;
+
+    ServiceAPI searchRoutes;
+
     String address;
+
+    double latStart;
+    double lngStart;
+
+    double latGoal;
+    double lngGoal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +59,8 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_destination);
 
         setMapView(savedInstanceState);
+        initRetrofit();
+        initLoc();
     }
 
     @Override
@@ -50,6 +73,12 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
     protected void onResume() {
         super.onResume();
         Log.v(TAG, "onResume 호출");
+
+        Log.v(TAG, "LatStart : " + latStart);
+        Log.v(TAG, "LngStart : " + lngStart);
+        Log.v(TAG, "LatGoal : " + latGoal);
+        Log.v(TAG, "LngGoal : " + lngGoal);
+        getSearchRoutes();
     }
 
     @Override
@@ -78,6 +107,30 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
 
     // Custom Method
 
+    public void initRetrofit() {
+        searchRoutes = RetrofitClient.getClient().create(ServiceAPI.class);
+    }
+
+    public void initLoc() {
+
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        currentLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        latStart = currentLocation.getLatitude();
+        lngStart = currentLocation.getLongitude();
+
+        Intent getDestination = getIntent();
+        address = getDestination.getStringExtra("destination");
+
+        latGoal = findGeoPoint(getApplicationContext(), address).getLatitude();
+        lngGoal = findGeoPoint(getApplicationContext(), address).getLongitude();
+
+    }
+
     public void setMapView(Bundle bundle) {
         //네이버 지도
         mapView = findViewById(R.id.naverMap);
@@ -89,20 +142,21 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.naverMap = naverMap;
 
-        Intent getDestination = getIntent();
-        address = getDestination.getStringExtra("destination");
+        naverMap.setMapType(NaverMap.MapType.Navi);
 
-        double lat = findGeoPoint(getApplicationContext(), address).getLatitude();
-        double lng = findGeoPoint(getApplicationContext(), address).getLongitude();
-        Log.v(TAG, "" + lat);
-        Log.v(TAG, "" + lng);
-
-        CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng),16);
+        CameraPosition cameraPosition = new CameraPosition(new LatLng((latStart + latGoal) / 2, (lngStart + lngGoal) / 2),8);
         naverMap.setCameraPosition(cameraPosition);
 
         Marker marker = new Marker();
-        marker.setPosition(new LatLng(lat, lng));
+        marker.setPosition(new LatLng(latGoal, lngGoal));
         marker.setMap(naverMap);
+
+        LocationOverlay locationOverlay = naverMap.getLocationOverlay();
+        locationOverlay.setVisible(true);
+        locationOverlay.setPosition(new LatLng(latStart, lngStart));
+        locationOverlay.setSubIconWidth(50);
+        locationOverlay.setSubIconHeight(50);
+        locationOverlay.setSubAnchor(new PointF(0.5f, 1));
 
     }
 
@@ -127,6 +181,32 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
             }
         }
         return loc;
+    }
+
+    private void getSearchRoutes() {
+        String start = lngStart + "," + latStart;
+        String goal = lngGoal + "," + latGoal;
+        String option = "trafast:traoptimal";
+        searchRoutes.getRoutes(start, goal, option).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                String result = response.body();
+
+                if(!result.equals(null)) {
+                    Log.v(TAG, "성공 : " + result);
+                }
+                else {
+                    Log.v(TAG, "실패 : " + result);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(Destination.this, "Sign up Error", Toast.LENGTH_SHORT).show();
+                Log.e("Sign up Error", t.getMessage());
+                t.printStackTrace();
+            }
+        });
     }
 
 }
