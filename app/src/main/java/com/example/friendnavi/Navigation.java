@@ -30,7 +30,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.naver.maps.geometry.LatLng;
-import com.naver.maps.map.CameraAnimation;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.MapView;
@@ -45,9 +44,6 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
 
     private MapView mapView;
     private static NaverMap naverMap;
-
-//    MapThread mapThread;
-//    MapHandler mapHandler;
 
     LocationManager lm;
     Location currentLocation;
@@ -224,25 +220,11 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
 
     }
 
-//    public void initLoc() {
-//        mapThread = new MapThread();
-//        mapThread.start();
-//
-//        mapHandler = new MapHandler();
-//    }
-
     public void setMapView(Bundle bundle, View view) {
         //네이버 지도
         mapView = view.findViewById(R.id.naverMap);
         mapView.onCreate(bundle);
         mapView.getMapAsync(this);
-
-//        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            return;
-//        }
-//
-//        lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-//        currentLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
     }
 
@@ -251,9 +233,6 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
         this.naverMap = naverMap;
 
         naverMap.setMapType(NaverMap.MapType.Navi);
-
-//        lat = currentLocation.getLatitude();
-//        lng = currentLocation.getLongitude();
 
         // 에이블디 위도(Latitude) : 37.27175, 경도(Longitude) : 127.01395
         CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng),16);
@@ -288,7 +267,6 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
     private void updateLocationUI(Location location) {
         lat = location.getLatitude();
         lng = location.getLongitude();
-        search.setText(lat + " / " + lng);
     }
 
     public void moveMap() {
