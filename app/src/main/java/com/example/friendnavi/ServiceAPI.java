@@ -37,9 +37,8 @@ public interface ServiceAPI {
     Call<String> getSearchResult(@Field("query") String query);
 
     @GET("routes.php")
-    Call<String> getRoutes(@Query("start") String start,
+    Call<TrafficData> getRoutes(@Query("start") String start,
                            @Query("goal") String goal,
                            @Query("option") String option);
-
 
 }

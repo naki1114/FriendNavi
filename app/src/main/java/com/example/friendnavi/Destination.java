@@ -144,7 +144,7 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
 
         naverMap.setMapType(NaverMap.MapType.Navi);
 
-        CameraPosition cameraPosition = new CameraPosition(new LatLng((latStart + latGoal) / 2, (lngStart + lngGoal) / 2),8);
+        CameraPosition cameraPosition = new CameraPosition(new LatLng((latStart + latGoal) / 2, (lngStart + lngGoal) / 2),13);
         naverMap.setCameraPosition(cameraPosition);
 
         Marker marker = new Marker();
@@ -186,24 +186,27 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
     private void getSearchRoutes() {
         String start = lngStart + "," + latStart;
         String goal = lngGoal + "," + latGoal;
-        String option = "trafast:traoptimal";
-        searchRoutes.getRoutes(start, goal, option).enqueue(new Callback<String>() {
+        String option = "trafast:tracomfort:traoptimal";
+        searchRoutes.getRoutes(start, goal, option).enqueue(new Callback<TrafficData>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                String result = response.body();
+            public void onResponse(Call<TrafficData> call, Response<TrafficData> response) {
+                TrafficData result = response.body();
 
                 if(!result.equals(null)) {
-                    Log.v(TAG, "성공 : " + result);
+                    Log.v(TAG, "성공 : " + result.getMessage());
+                    Log.v(TAG, "코드 : " + result.getCode());
+                    Log.v(TAG, "현시 : " + result.getCurrentDateTime());
+                    Log.v(TAG, "거리 : " + result.getRoute().getTraoptimal().get(0).getPath()[0][1]);
                 }
                 else {
-                    Log.v(TAG, "실패 : " + result);
+                    Log.v(TAG, "실패 : " + result.getMessage());
                 }
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<TrafficData> call, Throwable t) {
                 Toast.makeText(Destination.this, "Sign up Error", Toast.LENGTH_SHORT).show();
-                Log.e("Sign up Error", t.getMessage());
+                Log.e(TAG, t.getMessage());
                 t.printStackTrace();
             }
         });
