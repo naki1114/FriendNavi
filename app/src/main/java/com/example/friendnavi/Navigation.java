@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PointF;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -61,6 +65,24 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
 
     private static final int LOCATION_UPDATE_INTERVAL = 1000; // 1 seconds
 
+    SensorManager mSensorManager;
+    SensorListener mSensorListener;
+    Sensor mAccelerometer;
+    Sensor mMagnetometer;
+
+    boolean mLastAccelerometerSet = false;
+    boolean mLastMagnetometerSet = false;
+
+    float[] mLastAccelerometer = new float[3];
+    float[] mLastMagnetometer = new float[3];
+
+    float[] mR = new float[9];
+    float[] mOrientation = new float[3];
+
+    float mCurrentDegree = 0f;
+
+    int bearing = 0;
+
     private Handler locationHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -73,7 +95,7 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
             LocationOverlay locationOverlay = naverMap.getLocationOverlay();
             locationOverlay.setVisible(true);
             locationOverlay.setPosition(new LatLng(lat, lng));
-            locationOverlay.setBearing(0);
+            locationOverlay.setBearing(bearing);
             locationOverlay.setSubIcon(OverlayImage.fromResource(R.drawable.pointer));
             locationOverlay.setSubIconWidth(50);
             locationOverlay.setSubIconHeight(50);
@@ -89,6 +111,8 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
 
         this.context = context;
         initLoc();
+        initSensor();
+        startSensor();
     }
 
     @Override
@@ -168,6 +192,7 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
         super.onPause();
         Log.v(TAG, "onPause()");
         stopLocationUpdates();
+        stopSensor();
     }
 
     @Override
@@ -220,6 +245,24 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
 
     }
 
+    public void initSensor() {
+        mSensorManager = (SensorManager) context.getSystemService(context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+        mSensorListener = new SensorListener();
+    }
+
+    public void startSensor() {
+        mSensorManager.registerListener(mSensorListener, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(mSensorListener, mMagnetometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    public void stopSensor() {
+        mSensorManager.unregisterListener(mSensorListener);
+        mSensorManager.unregisterListener(mSensorListener);
+    }
+
     public void setMapView(Bundle bundle, View view) {
         //네이버 지도
         mapView = view.findViewById(R.id.naverMap);
@@ -241,7 +284,7 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
         LocationOverlay locationOverlay = naverMap.getLocationOverlay();
         locationOverlay.setVisible(true);
         locationOverlay.setPosition(new LatLng(lat, lng));
-        locationOverlay.setBearing(0);
+        locationOverlay.setBearing(bearing);
         locationOverlay.setSubIcon(OverlayImage.fromResource(R.drawable.pointer));
         locationOverlay.setSubIconWidth(50);
         locationOverlay.setSubIconHeight(50);
@@ -290,7 +333,7 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
                             LocationOverlay locationOverlay = naverMap.getLocationOverlay();
                             locationOverlay.setVisible(true);
                             locationOverlay.setPosition(new LatLng(lat, lng));
-                            locationOverlay.setBearing(0);
+                            locationOverlay.setBearing(bearing);
                             locationOverlay.setSubIcon(OverlayImage.fromResource(R.drawable.pointer));
                             locationOverlay.setSubIconWidth(50);
                             locationOverlay.setSubIconHeight(50);
@@ -301,6 +344,34 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
                 });
             }
         });
+    }
+
+    class SensorListener implements SensorEventListener {
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if (event.sensor == mAccelerometer) {
+                System.arraycopy(event.values, 0, mLastAccelerometer, 0, event.values.length);
+                mLastAccelerometerSet = true;
+            }
+            else if (event.sensor == mMagnetometer) {
+                System.arraycopy(event.values, 0, mLastMagnetometer, 0, event.values.length);
+                mLastMagnetometerSet = true;
+            }
+
+            if (mLastAccelerometerSet && mLastMagnetometerSet) {
+                SensorManager.getRotationMatrix(mR, null, mLastAccelerometer, mLastMagnetometer);
+                bearing = (int) (Math.toDegrees( SensorManager.getOrientation(mR, mOrientation)[0]) + 360) % 360;
+                search.setText("각도 : " + Float.toString(bearing));
+                mCurrentDegree = bearing;
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+
     }
 
 }
