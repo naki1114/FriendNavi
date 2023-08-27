@@ -7,6 +7,7 @@
     android:gravity="bottom"
     app:umanoDragView="@id/slideLayout"
     app:umanoPanelHeight="120dp"
+    app:umanoFadeColor="#00FFFFFF"
     tools:context=".Destination" >
 
     <androidx.constraintlayout.widget.ConstraintLayout
