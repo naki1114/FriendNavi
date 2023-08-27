@@ -52,4 +52,7 @@ dependencies {
     // Kakao Login
     implementation 'com.kakao.sdk:v2-user:2.10.0'
 
+    // Sliding Up Panel
+    implementation 'com.github.hannesa2:AndroidSlidingUpPanel:4.2.1'
+
 }
