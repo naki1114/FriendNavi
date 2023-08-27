@@ -63,4 +63,14 @@
     <string name="logout">로 그 아 웃</string>
     <string name="withdraw">회 원 탈 퇴</string>
 
+    <!--탐색 옵션-->
+    <string name="trafast">최소 시간</string>
+    <string name="tracomfort">편한 길</string>
+    <string name="traoptimal">최적</string>
+
+    <string name="duration">소요 시간</string>
+    <string name="distance">거리</string>
+    <string name="fare">통랭료</string>
+    <string name="timeOfArrival">도착 시간</string>
+
 </resources>
