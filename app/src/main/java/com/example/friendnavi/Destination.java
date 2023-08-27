@@ -15,6 +15,9 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.naver.maps.geometry.LatLng;
@@ -27,6 +30,7 @@ import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.PathOverlay;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,6 +45,24 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
 
     private MapView mapView;
     private static NaverMap naverMap;
+
+    LinearLayout slideLayout;
+    LinearLayout trafastLayout;
+    LinearLayout tracomfortLayout;
+    LinearLayout traoptimalLayout;
+
+    TextView durationTrafast;
+    TextView distanceTrafast;
+    TextView timeArriveTrafast;
+    TextView tollFareTrafast;
+    TextView durationTracomfort;
+    TextView distanceTracomfort;
+    TextView timeArriveTracomfort;
+    TextView tollFareTracomfort;
+    TextView durationTraoptimal;
+    TextView distanceTraoptimal;
+    TextView timeArriveTraoptimal;
+    TextView tollFareTraoptimal;
 
     LocationManager lm;
     Location currentLocation;
@@ -57,6 +79,8 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
 
     TrafficData getTrafficData;
 
+    PathOverlay path;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +89,7 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         setMapView(savedInstanceState);
         initRetrofit();
         initLoc();
+        initSearchInfoView();
     }
 
     @Override
@@ -78,11 +103,34 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         super.onResume();
         Log.v(TAG, "onResume 호출");
 
-        Log.v(TAG, "LatStart : " + latStart);
-        Log.v(TAG, "LngStart : " + lngStart);
-        Log.v(TAG, "LatGoal : " + latGoal);
-        Log.v(TAG, "LngGoal : " + lngGoal);
         getSearchRoutes();
+
+        trafastLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawPathTracomfort(false);
+                drawPathTraoptimal(false);
+                drawPathTrafast(true);
+            }
+        });
+
+        tracomfortLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawPathTrafast(false);
+                drawPathTraoptimal(false);
+                drawPathTracomfort(true);
+            }
+        });
+
+        traoptimalLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawPathTrafast(false);
+                drawPathTracomfort(false);
+                drawPathTraoptimal(true);
+            }
+        });
     }
 
     @Override
@@ -133,6 +181,26 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         latGoal = findGeoPoint(getApplicationContext(), address).getLatitude();
         lngGoal = findGeoPoint(getApplicationContext(), address).getLongitude();
 
+    }
+
+    public void initSearchInfoView() {
+        slideLayout = findViewById(R.id.slideLayout);
+        trafastLayout = findViewById(R.id.trafastLayout);
+        tracomfortLayout = findViewById(R.id.tracomfortLayout);
+        traoptimalLayout = findViewById(R.id.traoptimalLayout);
+
+        durationTrafast = findViewById(R.id.durationTrafast);
+        distanceTrafast = findViewById(R.id.distanceTrafast);
+        timeArriveTrafast = findViewById(R.id.timeArriveTrafast);
+        tollFareTrafast = findViewById(R.id.tollFareTrafast);
+        durationTracomfort = findViewById(R.id.durationTracomfort);
+        distanceTracomfort = findViewById(R.id.distanceTracomfort);
+        timeArriveTracomfort = findViewById(R.id.timeArriveTracomfort);
+        tollFareTracomfort = findViewById(R.id.tollFareTracomfort);
+        durationTraoptimal = findViewById(R.id.durationTraoptimal);
+        distanceTraoptimal = findViewById(R.id.distanceTraoptimal);
+        timeArriveTraoptimal = findViewById(R.id.timeArriveTraoptimal);
+        tollFareTraoptimal = findViewById(R.id.tollFareTraoptimal);
     }
 
     public void setMapView(Bundle bundle) {
@@ -198,10 +266,14 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
 
                 if(!getTrafficData.equals(null)) {
                     Log.v(TAG, "성공 : " + getTrafficData.getMessage());
-                    drawPath();
+                    drawPathTracomfort(false);
+                    drawPathTraoptimal(false);
+                    drawPathTrafast(true);
+                    setResult();
                 }
                 else {
                     Log.v(TAG, "실패 : " + getTrafficData.getMessage());
+                    slideLayout.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -210,38 +282,116 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
                 Toast.makeText(Destination.this, "Sign up Error", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, t.getMessage());
                 t.printStackTrace();
+                slideLayout.setVisibility(View.INVISIBLE);
             }
         });
     }
 
-    public void drawPath() {
+    public void drawPathTrafast(boolean check) {
         double[][] pathList = getTrafficData.getRoute().getTrafast().get(0).getPath();
         ArrayList<TrafficData.Guide> guideList = getTrafficData.getRoute().getTrafast().get(0).getGuide();
         int pathCount = pathList.length;
         int guideCount = guideList.size();
-        int count = 0;
+        path = new PathOverlay();
+        path.setMap(null);
 
         for (int i = pathCount - 1; i > 0; i--) {
-            PathOverlay path = new PathOverlay();
+            path = new PathOverlay();
             path.setCoords(Arrays.asList(
                     new LatLng(pathList[i][1], pathList[i][0]),
                     new LatLng(pathList[i - 1][1], pathList[i - 1][0])));
             path.setWidth(20);
             path.setOutlineWidth(0);
 
-            count++;
-
-            if (speedPath(guideList.get(guideCount - 1).getDistance(), guideList.get(guideCount - 1).getDuration()) >= 70) {
-                path.setColor(Color.GREEN);
-                Log.v(TAG, count + ". GREEN");
-            }
-            else if (speedPath(guideList.get(guideCount - 1).getDistance(), guideList.get(guideCount - 1).getDuration()) >= 40) {
-                path.setColor(Color.YELLOW);
-                Log.v(TAG, count + ". YELLOW");
+            if (check == true) {
+                if (speedPath(guideList.get(guideCount - 1).getDistance(), guideList.get(guideCount - 1).getDuration()) >= 70) {
+                    path.setColor(Color.GREEN);
+                }
+                else if (speedPath(guideList.get(guideCount - 1).getDistance(), guideList.get(guideCount - 1).getDuration()) >= 40) {
+                    path.setColor(Color.YELLOW);
+                }
+                else {
+                    path.setColor(Color.RED);
+                }
             }
             else {
-                path.setColor(Color.RED);
-                Log.v(TAG, count + ". RED");
+                path.setColor(Color.GRAY);
+            }
+
+            if (i == guideList.get(guideCount - 1).getPointIndex() && guideCount > 1) {
+                guideCount--;
+            }
+            path.setMap(naverMap);
+        }
+    }
+
+    public void drawPathTracomfort(boolean check) {
+        double[][] pathList = getTrafficData.getRoute().getTracomfort().get(0).getPath();
+        ArrayList<TrafficData.Guide> guideList = getTrafficData.getRoute().getTracomfort().get(0).getGuide();
+        int pathCount = pathList.length;
+        int guideCount = guideList.size();
+        path = new PathOverlay();
+        path.setMap(null);
+
+        for (int i = pathCount - 1; i > 0; i--) {
+            path = new PathOverlay();
+            path.setCoords(Arrays.asList(
+                    new LatLng(pathList[i][1], pathList[i][0]),
+                    new LatLng(pathList[i - 1][1], pathList[i - 1][0])));
+            path.setWidth(20);
+            path.setOutlineWidth(0);
+
+            if (check == true) {
+                if (speedPath(guideList.get(guideCount - 1).getDistance(), guideList.get(guideCount - 1).getDuration()) >= 70) {
+                    path.setColor(Color.GREEN);
+                }
+                else if (speedPath(guideList.get(guideCount - 1).getDistance(), guideList.get(guideCount - 1).getDuration()) >= 40) {
+                    path.setColor(Color.YELLOW);
+                }
+                else {
+                    path.setColor(Color.RED);
+                }
+            }
+            else {
+                path.setColor(Color.GRAY);
+            }
+
+            if (i == guideList.get(guideCount - 1).getPointIndex() && guideCount > 1) {
+                guideCount--;
+            }
+            path.setMap(naverMap);
+        }
+    }
+
+    public void drawPathTraoptimal(boolean check) {
+        double[][] pathList = getTrafficData.getRoute().getTraoptimal().get(0).getPath();
+        ArrayList<TrafficData.Guide> guideList = getTrafficData.getRoute().getTraoptimal().get(0).getGuide();
+        int pathCount = pathList.length;
+        int guideCount = guideList.size();
+        path = new PathOverlay();
+        path.setMap(null);
+
+        for (int i = pathCount - 1; i > 0; i--) {
+            path = new PathOverlay();
+            path.setCoords(Arrays.asList(
+                    new LatLng(pathList[i][1], pathList[i][0]),
+                    new LatLng(pathList[i - 1][1], pathList[i - 1][0])));
+            path.setWidth(20);
+            path.setOutlineWidth(0);
+
+            if (check == true) {
+                if (speedPath(guideList.get(guideCount - 1).getDistance(), guideList.get(guideCount - 1).getDuration()) >= 70) {
+                    path.setColor(Color.GREEN);
+                }
+                else if (speedPath(guideList.get(guideCount - 1).getDistance(), guideList.get(guideCount - 1).getDuration()) >= 40) {
+                    path.setColor(Color.YELLOW);
+                }
+                else {
+                    path.setColor(Color.RED);
+                }
+            }
+            else {
+                path.setColor(Color.GRAY);
             }
 
             if (i == guideList.get(guideCount - 1).getPointIndex() && guideCount > 1) {
@@ -258,6 +408,40 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         double speed = dis / dur;
 
         return speed;
+    }
+
+    public void setResult() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat();
+
+        int duration = getTrafficData.getRoute().getTrafast().get(0).getSummary().getDuration() / 1000 / 60;
+        int distance = getTrafficData.getRoute().getTrafast().get(0).getSummary().getDistance() / 1000;
+        String[] timeArrive = dateFormat.format(System.currentTimeMillis() + getTrafficData.getRoute().getTrafast().get(0).getSummary().getDuration()).split(" ");
+        int tollFare = getTrafficData.getRoute().getTrafast().get(0).getSummary().getTollFare();
+
+        durationTrafast.setText(duration + " 분");
+        distanceTrafast.setText(distance + " km");
+        timeArriveTrafast.setText(timeArrive[1] + " " + timeArrive[2]);
+        tollFareTrafast.setText(tollFare + " 원");
+
+        duration = getTrafficData.getRoute().getTracomfort().get(0).getSummary().getDuration() / 1000 / 60;
+        distance = getTrafficData.getRoute().getTracomfort().get(0).getSummary().getDistance() / 1000;
+        timeArrive = dateFormat.format(System.currentTimeMillis() + getTrafficData.getRoute().getTracomfort().get(0).getSummary().getDuration()).split(" ");
+        tollFare = getTrafficData.getRoute().getTracomfort().get(0).getSummary().getTollFare();
+
+        durationTracomfort.setText(duration + " 분");
+        distanceTracomfort.setText(distance + " km");
+        timeArriveTracomfort.setText(timeArrive[1] + " " + timeArrive[2]);
+        tollFareTracomfort.setText(tollFare + " 원");
+
+        duration = getTrafficData.getRoute().getTraoptimal().get(0).getSummary().getDuration() / 1000 / 60;
+        distance = getTrafficData.getRoute().getTraoptimal().get(0).getSummary().getDistance() / 1000;
+        timeArrive = dateFormat.format(System.currentTimeMillis() + getTrafficData.getRoute().getTraoptimal().get(0).getSummary().getDuration()).split(" ");
+        tollFare = getTrafficData.getRoute().getTraoptimal().get(0).getSummary().getTollFare();
+
+        durationTraoptimal.setText(duration + " 분");
+        distanceTraoptimal.setText(distance + " km");
+        timeArriveTraoptimal.setText(timeArrive[1] + " " + timeArrive[2]);
+        tollFareTraoptimal.setText(tollFare + " 원");
     }
 
 }
