@@ -24,9 +24,11 @@ import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.overlay.Marker;
-import com.naver.maps.map.overlay.OverlayImage;
+import com.naver.maps.map.overlay.PathOverlay;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -52,6 +54,8 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
 
     double latGoal;
     double lngGoal;
+
+    TrafficData getTrafficData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,16 +194,14 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         searchRoutes.getRoutes(start, goal, option).enqueue(new Callback<TrafficData>() {
             @Override
             public void onResponse(Call<TrafficData> call, Response<TrafficData> response) {
-                TrafficData result = response.body();
+                getTrafficData = response.body();
 
-                if(!result.equals(null)) {
-                    Log.v(TAG, "성공 : " + result.getMessage());
-                    Log.v(TAG, "코드 : " + result.getCode());
-                    Log.v(TAG, "현시 : " + result.getCurrentDateTime());
-                    Log.v(TAG, "거리 : " + result.getRoute().getTraoptimal().get(0).getPath()[0][1]);
+                if(!getTrafficData.equals(null)) {
+                    Log.v(TAG, "성공 : " + getTrafficData.getMessage());
+                    drawPath();
                 }
                 else {
-                    Log.v(TAG, "실패 : " + result.getMessage());
+                    Log.v(TAG, "실패 : " + getTrafficData.getMessage());
                 }
             }
 
@@ -210,6 +212,52 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
                 t.printStackTrace();
             }
         });
+    }
+
+    public void drawPath() {
+        double[][] pathList = getTrafficData.getRoute().getTrafast().get(0).getPath();
+        ArrayList<TrafficData.Guide> guideList = getTrafficData.getRoute().getTrafast().get(0).getGuide();
+        int pathCount = pathList.length;
+        int guideCount = guideList.size();
+        int count = 0;
+
+        for (int i = pathCount - 1; i > 0; i--) {
+            PathOverlay path = new PathOverlay();
+            path.setCoords(Arrays.asList(
+                    new LatLng(pathList[i][1], pathList[i][0]),
+                    new LatLng(pathList[i - 1][1], pathList[i - 1][0])));
+            path.setWidth(20);
+            path.setOutlineWidth(0);
+
+            count++;
+
+            if (speedPath(guideList.get(guideCount - 1).getDistance(), guideList.get(guideCount - 1).getDuration()) >= 70) {
+                path.setColor(Color.GREEN);
+                Log.v(TAG, count + ". GREEN");
+            }
+            else if (speedPath(guideList.get(guideCount - 1).getDistance(), guideList.get(guideCount - 1).getDuration()) >= 40) {
+                path.setColor(Color.YELLOW);
+                Log.v(TAG, count + ". YELLOW");
+            }
+            else {
+                path.setColor(Color.RED);
+                Log.v(TAG, count + ". RED");
+            }
+
+            if (i == guideList.get(guideCount - 1).getPointIndex() && guideCount > 1) {
+                guideCount--;
+            }
+            path.setMap(naverMap);
+        }
+    }
+
+    public double speedPath(int distance, int duration) {
+        double dis = distance / 1000;           // m -> km
+        double dur = duration / 1000 / 60 / 60; // ms -> h
+
+        double speed = dis / dur;
+
+        return speed;
     }
 
 }
