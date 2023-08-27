@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
 
-    private Navigation fragNavi;
+    private Map fragMap;
     private Friend fragFriend;
     private Chatting fragChatting;
     private Profile fragProfile;
@@ -71,13 +71,13 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
 
-        fragNavi = new Navigation();
+        fragMap = new Map();
         fragFriend = new Friend();
         fragChatting = new Chatting();
         fragProfile = new Profile();
 
         transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.fragmentLayout, fragNavi).commitAllowingStateLoss();
+        transaction.replace(R.id.fragmentLayout, fragMap).commitAllowingStateLoss();
 
     }
 
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         switch(view.getId())
         {
             case R.id.btnHome:
-                transaction.replace(R.id.fragmentLayout, fragNavi).commitAllowingStateLoss();
+                transaction.replace(R.id.fragmentLayout, fragMap).commitAllowingStateLoss();
                 break;
             case R.id.btnFriend:
                 transaction.replace(R.id.fragmentLayout, fragFriend).commitAllowingStateLoss();

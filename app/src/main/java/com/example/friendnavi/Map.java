@@ -42,7 +42,7 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.overlay.OverlayImage;
 
-public class Navigation extends Fragment implements OnMapReadyCallback {
+public class Map extends Fragment implements OnMapReadyCallback {
 
     String TAG = "F_네비게이션 페이지";
 
@@ -125,7 +125,7 @@ public class Navigation extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.v(TAG, "onCreateView()");
 
-        View view = inflater.inflate(R.layout.fragment_navigation, container, false);
+        View view = inflater.inflate(R.layout.fragment_map, container, false);
         setMapView(savedInstanceState, view);
 
         initView(view);
