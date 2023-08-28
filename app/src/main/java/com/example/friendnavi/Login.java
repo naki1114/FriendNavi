@@ -87,9 +87,11 @@ public class Login extends AppCompatActivity {
             public void onClick(View view) {
                 if (UserApiClient.getInstance().isKakaoTalkLoginAvailable(Login.this)) {
                     UserApiClient.getInstance().loginWithKakaoTalk(Login.this, callback);
+                    kakaoJoin();
                 }
                 else {
                     UserApiClient.getInstance().loginWithKakaoAccount(Login.this, callback);
+                    kakaoJoin();
                 }
             }
         });
@@ -185,6 +187,39 @@ public class Login extends AppCompatActivity {
                 }
                 else {
                     Log.d(TAG, "로그인이 되어있지 않습니다.");
+                }
+                return null;
+            }
+        });
+    }
+
+    public void kakaoJoin() {
+        UserApiClient.getInstance().me(new Function2<User, Throwable, Unit>() {
+            @Override
+            public Unit invoke(User user, Throwable throwable) {
+                if (user != null) {
+                    String kakaoId = user.getKakaoAccount().getEmail();
+                    String kakaoNickname = user.getKakaoAccount().getProfile().getNickname();
+
+                    transUserInfo.kakaoJoin(kakaoId, kakaoNickname).enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            String result = response.body();
+                            if(result.equals("카카오 유저 회원가입 완료") || result.equals("이미 존재하는 아이디 입니다.")) {
+                                Log.v(TAG, "카카오 유저 회원가입 완료");
+                            }
+                            else {
+                                Toast.makeText(Login.this, result, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            Toast.makeText(Login.this, "Sign up Error", Toast.LENGTH_SHORT).show();
+                            Log.e("Sign up Error", t.getMessage());
+                            t.printStackTrace();
+                        }
+                    });
                 }
                 return null;
             }

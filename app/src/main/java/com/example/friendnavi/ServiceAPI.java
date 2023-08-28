@@ -41,4 +41,9 @@ public interface ServiceAPI {
                            @Query("goal") String goal,
                            @Query("option") String option);
 
+    @FormUrlEncoded
+    @POST("kakaoJoin.php")
+    Call<String> kakaoJoin(@Field("id") String id,
+                           @Field("nickname") String nickname);
+
 }
