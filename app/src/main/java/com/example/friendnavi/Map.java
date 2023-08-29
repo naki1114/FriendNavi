@@ -362,7 +362,6 @@ public class Map extends Fragment implements OnMapReadyCallback {
             if (mLastAccelerometerSet && mLastMagnetometerSet) {
                 SensorManager.getRotationMatrix(mR, null, mLastAccelerometer, mLastMagnetometer);
                 bearing = (int) (Math.toDegrees( SensorManager.getOrientation(mR, mOrientation)[0]) + 360) % 360;
-                search.setText("각도 : " + Float.toString(bearing));
                 mCurrentDegree = bearing;
             }
         }
