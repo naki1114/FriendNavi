@@ -64,6 +64,8 @@
     <string name="withdraw">회 원 탈 퇴</string>
 
     <!--탐색 옵션-->
+    <string name="guide">안내 시작</string>
+
     <string name="trafast">최소 시간</string>
     <string name="tracomfort">편한 길</string>
     <string name="traoptimal">최적</string>
