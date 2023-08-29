@@ -16,6 +16,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,6 +64,8 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
     TextView distanceTraoptimal;
     TextView timeArriveTraoptimal;
     TextView tollFareTraoptimal;
+
+    Button btnGuide;
 
     LocationManager lm;
     Location currentLocation;
@@ -129,6 +132,13 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
                 drawPathTrafast(false);
                 drawPathTracomfort(false);
                 drawPathTraoptimal(true);
+            }
+        });
+
+        btnGuide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toNavigation();
             }
         });
     }
@@ -201,6 +211,8 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         distanceTraoptimal = findViewById(R.id.distanceTraoptimal);
         timeArriveTraoptimal = findViewById(R.id.timeArriveTraoptimal);
         tollFareTraoptimal = findViewById(R.id.tollFareTraoptimal);
+
+        btnGuide = findViewById(R.id.btnGuide);
     }
 
     public void setMapView(Bundle bundle) {
@@ -442,6 +454,11 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         distanceTraoptimal.setText(distance + " km");
         timeArriveTraoptimal.setText(timeArrive[1] + " " + timeArrive[2]);
         tollFareTraoptimal.setText(tollFare + " 원");
+    }
+
+    public void toNavigation() {
+        Intent intent = new Intent(getApplicationContext(), Navigation.class);
+        startActivity(intent);
     }
 
 }
