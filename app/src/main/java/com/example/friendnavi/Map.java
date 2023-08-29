@@ -44,7 +44,7 @@ import com.naver.maps.map.overlay.OverlayImage;
 
 public class Map extends Fragment implements OnMapReadyCallback {
 
-    String TAG = "F_네비게이션 페이지";
+    String TAG = "F_맵 페이지";
 
     private MapView mapView;
     private static NaverMap naverMap;
