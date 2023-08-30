@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PointF;
 import android.hardware.Sensor;
@@ -28,7 +29,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
-import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
@@ -71,6 +71,10 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
     float mCurrentDegree = 0f;
 
     int bearing = 0;
+    int zoomLevel = 19;
+
+    TrafficData getTrafficData;
+    String trafficOption;
 
     private Handler locationHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -78,7 +82,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
             Location location = (Location) msg.obj;
             updateLocationUI(location);
             moveMap();
-            CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng),19, 100, bearing);
+            CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, 100, bearing);
             naverMap.setCameraPosition(cameraPosition);
 
             LocationOverlay locationOverlay = naverMap.getLocationOverlay();
@@ -103,6 +107,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         initLoc();
         initSensor();
         startSensor();
+        getIntentTrafficData();
     }
 
     @Override
@@ -198,6 +203,12 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         mSensorManager.unregisterListener(mSensorListener);
     }
 
+    public void getIntentTrafficData() {
+        Intent intent = getIntent();
+        getTrafficData = (TrafficData) intent.getSerializableExtra("trafficData");
+        trafficOption = intent.getStringExtra("trafficOption");
+    }
+
     public void setMapView(Bundle bundle) {
         //네이버 지도
         mapView = (MapView) findViewById(R.id.naverMap);
@@ -211,7 +222,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
 
         naverMap.setMapType(NaverMap.MapType.Navi);
 
-        CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng),19, 100, bearing);
+        CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, 100, bearing);
         naverMap.setCameraPosition(cameraPosition);
 
         LocationOverlay locationOverlay = naverMap.getLocationOverlay();
@@ -260,7 +271,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
 
                             }
                             i--;
-                            CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng),19, 100, bearing);
+                            CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, 100, bearing);
                             naverMap.setCameraPosition(cameraPosition);
 
                             LocationOverlay locationOverlay = naverMap.getLocationOverlay();

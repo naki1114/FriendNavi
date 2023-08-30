@@ -73,6 +73,7 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
     ServiceAPI searchRoutes;
 
     String address;
+    String trafficOption = "trafast";
 
     double latStart;
     double lngStart;
@@ -114,6 +115,7 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
                 drawPathTracomfort(false);
                 drawPathTraoptimal(false);
                 drawPathTrafast(true);
+                trafficOption = "trafast";
             }
         });
 
@@ -123,6 +125,7 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
                 drawPathTrafast(false);
                 drawPathTraoptimal(false);
                 drawPathTracomfort(true);
+                trafficOption = "tracomfort";
             }
         });
 
@@ -132,6 +135,7 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
                 drawPathTrafast(false);
                 drawPathTracomfort(false);
                 drawPathTraoptimal(true);
+                trafficOption = "traoptimal";
             }
         });
 
@@ -457,8 +461,10 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void toNavigation() {
-        Intent intent = new Intent(getApplicationContext(), Navigation.class);
-        startActivity(intent);
+        Intent toNavigationActivity = new Intent(getApplicationContext(), Navigation.class);
+        toNavigationActivity.putExtra("trafficData", getTrafficData);
+        toNavigationActivity.putExtra("trafficOption", trafficOption);
+        startActivity(toNavigationActivity);
     }
 
 }

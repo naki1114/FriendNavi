@@ -2,9 +2,12 @@ package com.example.friendnavi;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class TrafficData {
+public class TrafficData implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @SerializedName("code")
     int code;
@@ -57,7 +60,7 @@ public class TrafficData {
         this.route = route;
     }
 
-    public class Route {
+    public class Route implements Serializable {
 
         // 실시간 빠른길
         @SerializedName("trafast")
@@ -97,7 +100,7 @@ public class TrafficData {
 
     }
 
-    public class Option {
+    public class Option implements Serializable {
 
         @SerializedName("summary")
         Summary summary;
@@ -176,7 +179,7 @@ public class TrafficData {
 
     }
 
-    public class Summary {
+    public class Summary implements Serializable {
 
         @SerializedName("distance")
         int distance;
@@ -267,7 +270,7 @@ public class TrafficData {
 
     }
 
-    public class Section {
+    public class Section implements Serializable {
 
         @SerializedName("pointIndex")
         int pointIndex;
@@ -346,7 +349,7 @@ public class TrafficData {
 
     }
 
-    public class Guide {
+    public class Guide implements Serializable {
 
         @SerializedName("pointIndex")
         int pointIndex;
