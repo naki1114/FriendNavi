@@ -8,6 +8,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -34,6 +35,10 @@ import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.overlay.OverlayImage;
+import com.naver.maps.map.overlay.PathOverlay;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Navigation extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -75,6 +80,8 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
 
     TrafficData getTrafficData;
     String trafficOption;
+
+    PathOverlay path;
 
     private Handler locationHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -234,6 +241,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         locationOverlay.setSubIconHeight(50);
         locationOverlay.setSubAnchor(new PointF(0.5f, 1));
 
+        drawPath(trafficOption);
     }
 
     private void startLocationUpdates() {
@@ -315,6 +323,44 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
 
         }
 
+    }
+
+    public void drawPath(String trafficOption) {
+        double[][] pathList = new double[0][0];
+        ArrayList<TrafficData.Guide> guideList = new ArrayList<>();
+
+        if (trafficOption.equals("trafast")) {
+            pathList = getTrafficData.getRoute().getTrafast().get(0).getPath();
+            guideList = getTrafficData.getRoute().getTrafast().get(0).getGuide();
+        }
+        else if (trafficOption.equals("tracomfort")) {
+            pathList = getTrafficData.getRoute().getTracomfort().get(0).getPath();
+            guideList = getTrafficData.getRoute().getTracomfort().get(0).getGuide();
+        }
+        else {
+            pathList = getTrafficData.getRoute().getTraoptimal().get(0).getPath();
+            guideList = getTrafficData.getRoute().getTraoptimal().get(0).getGuide();
+        }
+
+        int pathCount = pathList.length;
+        int guideCount = guideList.size();
+        path = new PathOverlay();
+        path.setMap(null);
+
+        for (int i = pathCount - 1; i > 0; i--) {
+            path = new PathOverlay();
+            path.setCoords(Arrays.asList(
+                    new LatLng(pathList[i][1], pathList[i][0]),
+                    new LatLng(pathList[i - 1][1], pathList[i - 1][0])));
+            path.setWidth(500);
+            path.setOutlineWidth(0);
+            path.setColor(Color.BLUE);
+
+            if (i == guideList.get(guideCount - 1).getPointIndex() && guideCount > 1) {
+                guideCount--;
+            }
+            path.setMap(naverMap);
+        }
     }
 
 }
