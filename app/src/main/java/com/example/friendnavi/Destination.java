@@ -3,6 +3,7 @@ package com.example.friendnavi;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -108,6 +109,7 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         Log.v(TAG, "onResume 호출");
 
         getSearchRoutes();
+        trafastLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.theme));
 
         trafastLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +118,9 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
                 drawPathTraoptimal(false);
                 drawPathTrafast(true);
                 trafficOption = "trafast";
+                trafastLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.theme));
+                tracomfortLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                traoptimalLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
             }
         });
 
@@ -126,6 +131,9 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
                 drawPathTraoptimal(false);
                 drawPathTracomfort(true);
                 trafficOption = "tracomfort";
+                trafastLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                tracomfortLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.theme));
+                traoptimalLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
             }
         });
 
@@ -136,6 +144,9 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
                 drawPathTracomfort(false);
                 drawPathTraoptimal(true);
                 trafficOption = "traoptimal";
+                trafastLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                tracomfortLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                traoptimalLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.theme));
             }
         });
 
