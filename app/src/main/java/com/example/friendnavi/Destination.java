@@ -95,6 +95,7 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         initRetrofit();
         initLoc();
         initSearchInfoView();
+        trafastLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.theme));
     }
 
     @Override
@@ -109,7 +110,6 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         Log.v(TAG, "onResume 호출");
 
         getSearchRoutes();
-        trafastLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.theme));
 
         trafastLayout.setOnClickListener(new View.OnClickListener() {
             @Override
