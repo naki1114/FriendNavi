@@ -445,7 +445,12 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         String[] timeArrive = dateFormat.format(System.currentTimeMillis() + getTrafficData.getRoute().getTrafast().get(0).getSummary().getDuration()).split(" ");
         int tollFare = getTrafficData.getRoute().getTrafast().get(0).getSummary().getTollFare();
 
-        durationTrafast.setText(duration + " 분");
+        if (duration / 60 == 0) {
+            durationTrafast.setText(duration + " 분");
+        }
+        else {
+            durationTrafast.setText(duration / 60 + " 시간 " + duration % 60 + " 분");
+        }
         distanceTrafast.setText(distance + " km");
         timeArriveTrafast.setText(timeArrive[1] + " " + timeArrive[2]);
         tollFareTrafast.setText(tollFare + " 원");
@@ -455,7 +460,12 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         timeArrive = dateFormat.format(System.currentTimeMillis() + getTrafficData.getRoute().getTracomfort().get(0).getSummary().getDuration()).split(" ");
         tollFare = getTrafficData.getRoute().getTracomfort().get(0).getSummary().getTollFare();
 
-        durationTracomfort.setText(duration + " 분");
+        if (duration / 60 == 0) {
+            durationTracomfort.setText(duration + " 분");
+        }
+        else {
+            durationTracomfort.setText(duration / 60 + " 시간 " + duration % 60 + " 분");
+        }
         distanceTracomfort.setText(distance + " km");
         timeArriveTracomfort.setText(timeArrive[1] + " " + timeArrive[2]);
         tollFareTracomfort.setText(tollFare + " 원");
@@ -465,7 +475,12 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         timeArrive = dateFormat.format(System.currentTimeMillis() + getTrafficData.getRoute().getTraoptimal().get(0).getSummary().getDuration()).split(" ");
         tollFare = getTrafficData.getRoute().getTraoptimal().get(0).getSummary().getTollFare();
 
-        durationTraoptimal.setText(duration + " 분");
+        if (duration / 60 == 0) {
+            durationTraoptimal.setText(duration + " 분");
+        }
+        else {
+            durationTraoptimal.setText(duration / 60 + " 시간 " + duration % 60 + " 분");
+        }
         distanceTraoptimal.setText(distance + " km");
         timeArriveTraoptimal.setText(timeArrive[1] + " " + timeArrive[2]);
         tollFareTraoptimal.setText(tollFare + " 원");
