@@ -16,6 +16,9 @@ public class TrafficOptionAdapter extends RecyclerView.Adapter<TrafficOptionAdap
 
     private ArrayList<TrafficOption> trafficOptionList;
 
+    private int oldPosition = 0;
+    private int selectedPosition = 0;
+
     public TrafficOptionAdapter (ArrayList<TrafficOption> trafficOptionList) {
         trafficOptionList = new ArrayList<>();
         this.trafficOptionList = trafficOptionList;
@@ -38,14 +41,13 @@ public class TrafficOptionAdapter extends RecyclerView.Adapter<TrafficOptionAdap
         TextView duration;
         TextView timeArrive;
         TextView tollFare;
-        View itemView;
         Context context;
 
         public TrafficOptionViewHolder (Context context, View view) {
             super(view);
 
-            itemView = view;
             this.context = context;
+
             option = view.findViewById(R.id.option);
             distance = view.findViewById(R.id.distance);
             duration = view.findViewById(R.id.duration);
@@ -87,9 +89,26 @@ public class TrafficOptionAdapter extends RecyclerView.Adapter<TrafficOptionAdap
         String distance = trafficOptionList.get(position).getDistance();
         String tollFare = trafficOptionList.get(position).getTollFare();
 
-        if (position == 0) {
+        if (selectedPosition == position) {
             holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.context, R.color.theme));
         }
+        else {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.context, R.color.white));
+        }
+
+        int pos = position;
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                oldPosition = selectedPosition;
+                selectedPosition = pos;
+
+                notifyItemChanged(oldPosition);
+                notifyItemChanged(selectedPosition);
+            }
+        });
+
         holder.option.setText(option);
         holder.timeArrive.setText(timeArrive);
         holder.duration.setText(duration);

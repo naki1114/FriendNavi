@@ -77,9 +77,7 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
 
     ArrayList<TrafficOption> optionList;
 
-    int firstPosition = 0;
-
-    View colorView;
+    int firstCheck = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,31 +106,25 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         optionAdapter.setOnItemClickListener(new TrafficOptionAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                View view = optionView.getChildAt(firstPosition);
-                view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-
                 if (position == 0) {
                     drawPathTracomfort(false);
                     drawPathTraoptimal(false);
                     drawPathTrafast(true);
-                    v.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.theme));
                     trafficOption = "trafast";
                 }
                 else if (position == 1) {
                     drawPathTrafast(false);
                     drawPathTraoptimal(false);
                     drawPathTracomfort(true);
-                    v.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.theme));
                     trafficOption = "tracomfort";
                 }
                 else {
                     drawPathTrafast(false);
                     drawPathTracomfort(false);
                     drawPathTraoptimal(true);
-                    v.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.theme));
                     trafficOption = "traoptimal";
                 }
-                firstPosition = position;
+                firstCheck = 1;
             }
         });
 
