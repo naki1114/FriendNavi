@@ -326,8 +326,8 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
     }
 
     public void drawPath(String trafficOption) {
-        double[][] pathList = new double[0][0];
-        ArrayList<TrafficData.Guide> guideList = new ArrayList<>();
+        double[][] pathList;
+        ArrayList<TrafficData.Guide> guideList;
 
         if (trafficOption.equals("trafast")) {
             pathList = getTrafficData.getRoute().getTrafast().get(0).getPath();
@@ -352,7 +352,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
             path.setCoords(Arrays.asList(
                     new LatLng(pathList[i][1], pathList[i][0]),
                     new LatLng(pathList[i - 1][1], pathList[i - 1][0])));
-            path.setWidth(500);
+            path.setWidth(200);
             path.setOutlineWidth(0);
             path.setColor(Color.BLUE);
 
