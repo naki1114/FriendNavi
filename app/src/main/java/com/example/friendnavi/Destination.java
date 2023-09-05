@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -48,24 +51,6 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
     private MapView mapView;
     private static NaverMap naverMap;
 
-    LinearLayout slideLayout;
-    LinearLayout trafastLayout;
-    LinearLayout tracomfortLayout;
-    LinearLayout traoptimalLayout;
-
-    TextView durationTrafast;
-    TextView distanceTrafast;
-    TextView timeArriveTrafast;
-    TextView tollFareTrafast;
-    TextView durationTracomfort;
-    TextView distanceTracomfort;
-    TextView timeArriveTracomfort;
-    TextView tollFareTracomfort;
-    TextView durationTraoptimal;
-    TextView distanceTraoptimal;
-    TextView timeArriveTraoptimal;
-    TextView tollFareTraoptimal;
-
     Button btnGuide;
 
     LocationManager lm;
@@ -86,6 +71,16 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
 
     PathOverlay path;
 
+    RecyclerView optionView;
+    TrafficOptionAdapter optionAdapter;
+    TrafficOption traOption;
+
+    ArrayList<TrafficOption> optionList;
+
+    int firstPosition = 0;
+
+    View colorView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +90,6 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         initRetrofit();
         initLoc();
         initSearchInfoView();
-        trafastLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.theme));
     }
 
     @Override
@@ -111,42 +105,34 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
 
         getSearchRoutes();
 
-        trafastLayout.setOnClickListener(new View.OnClickListener() {
+        optionAdapter.setOnItemClickListener(new TrafficOptionAdapter.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
-                drawPathTracomfort(false);
-                drawPathTraoptimal(false);
-                drawPathTrafast(true);
-                trafficOption = "trafast";
-                trafastLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.theme));
-                tracomfortLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-                traoptimalLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-            }
-        });
+            public void onItemClick(View v, int position) {
+                View view = optionView.getChildAt(firstPosition);
+                view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
 
-        tracomfortLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawPathTrafast(false);
-                drawPathTraoptimal(false);
-                drawPathTracomfort(true);
-                trafficOption = "tracomfort";
-                trafastLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-                tracomfortLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.theme));
-                traoptimalLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-            }
-        });
-
-        traoptimalLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawPathTrafast(false);
-                drawPathTracomfort(false);
-                drawPathTraoptimal(true);
-                trafficOption = "traoptimal";
-                trafastLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-                tracomfortLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-                traoptimalLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.theme));
+                if (position == 0) {
+                    drawPathTracomfort(false);
+                    drawPathTraoptimal(false);
+                    drawPathTrafast(true);
+                    v.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.theme));
+                    trafficOption = "trafast";
+                }
+                else if (position == 1) {
+                    drawPathTrafast(false);
+                    drawPathTraoptimal(false);
+                    drawPathTracomfort(true);
+                    v.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.theme));
+                    trafficOption = "tracomfort";
+                }
+                else {
+                    drawPathTrafast(false);
+                    drawPathTracomfort(false);
+                    drawPathTraoptimal(true);
+                    v.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.theme));
+                    trafficOption = "traoptimal";
+                }
+                firstPosition = position;
             }
         });
 
@@ -209,25 +195,17 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void initSearchInfoView() {
-        slideLayout = findViewById(R.id.slideLayout);
-        trafastLayout = findViewById(R.id.trafastLayout);
-        tracomfortLayout = findViewById(R.id.tracomfortLayout);
-        traoptimalLayout = findViewById(R.id.traoptimalLayout);
-
-        durationTrafast = findViewById(R.id.durationTrafast);
-        distanceTrafast = findViewById(R.id.distanceTrafast);
-        timeArriveTrafast = findViewById(R.id.timeArriveTrafast);
-        tollFareTrafast = findViewById(R.id.tollFareTrafast);
-        durationTracomfort = findViewById(R.id.durationTracomfort);
-        distanceTracomfort = findViewById(R.id.distanceTracomfort);
-        timeArriveTracomfort = findViewById(R.id.timeArriveTracomfort);
-        tollFareTracomfort = findViewById(R.id.tollFareTracomfort);
-        durationTraoptimal = findViewById(R.id.durationTraoptimal);
-        distanceTraoptimal = findViewById(R.id.distanceTraoptimal);
-        timeArriveTraoptimal = findViewById(R.id.timeArriveTraoptimal);
-        tollFareTraoptimal = findViewById(R.id.tollFareTraoptimal);
-
+        optionView = findViewById(R.id.optionView);
         btnGuide = findViewById(R.id.btnGuide);
+
+        optionView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, 0);
+        dividerItemDecoration.setDrawable(this.getResources().getDrawable(R.drawable.divider_item_option));
+        optionView.addItemDecoration(dividerItemDecoration);
+
+        optionList = new ArrayList<>();
+        optionAdapter = new TrafficOptionAdapter(optionList);
     }
 
     public void setMapView(Bundle bundle) {
@@ -290,17 +268,16 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onResponse(Call<TrafficData> call, Response<TrafficData> response) {
                 getTrafficData = response.body();
+                setResult();
 
                 if(!getTrafficData.equals(null)) {
                     Log.v(TAG, "성공 : " + getTrafficData.getMessage());
                     drawPathTracomfort(false);
                     drawPathTraoptimal(false);
                     drawPathTrafast(true);
-                    setResult();
                 }
                 else {
                     Log.v(TAG, "실패 : " + getTrafficData.getMessage());
-                    slideLayout.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -309,7 +286,6 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
                 Toast.makeText(Destination.this, "Sign up Error", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, t.getMessage());
                 t.printStackTrace();
-                slideLayout.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -446,14 +422,13 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         int tollFare = getTrafficData.getRoute().getTrafast().get(0).getSummary().getTollFare();
 
         if (duration / 60 == 0) {
-            durationTrafast.setText(duration + " 분");
+            traOption = new TrafficOption("최소 시간", timeArrive[1] + " " + timeArrive[2], duration + " 분", distance + " km", tollFare + " 원");
         }
         else {
-            durationTrafast.setText(duration / 60 + " 시간 " + duration % 60 + " 분");
+            traOption = new TrafficOption("최소 시간", timeArrive[1] + " " + timeArrive[2], duration / 60 + " 시간 " + duration % 60 + " 분", distance + " km", tollFare + " 원");
         }
-        distanceTrafast.setText(distance + " km");
-        timeArriveTrafast.setText(timeArrive[1] + " " + timeArrive[2]);
-        tollFareTrafast.setText(tollFare + " 원");
+        optionAdapter.addData(traOption);
+        optionView.setAdapter(optionAdapter);
 
         duration = getTrafficData.getRoute().getTracomfort().get(0).getSummary().getDuration() / 1000 / 60;
         distance = getTrafficData.getRoute().getTracomfort().get(0).getSummary().getDistance() / 1000;
@@ -461,14 +436,13 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         tollFare = getTrafficData.getRoute().getTracomfort().get(0).getSummary().getTollFare();
 
         if (duration / 60 == 0) {
-            durationTracomfort.setText(duration + " 분");
+            traOption = new TrafficOption("편한 길", timeArrive[1] + " " + timeArrive[2], duration + " 분", distance + " km", tollFare + " 원");
         }
         else {
-            durationTracomfort.setText(duration / 60 + " 시간 " + duration % 60 + " 분");
+            traOption = new TrafficOption("편한 길", timeArrive[1] + " " + timeArrive[2], duration / 60 + " 시간 " + duration % 60 + " 분", distance + " km", tollFare + " 원");
         }
-        distanceTracomfort.setText(distance + " km");
-        timeArriveTracomfort.setText(timeArrive[1] + " " + timeArrive[2]);
-        tollFareTracomfort.setText(tollFare + " 원");
+        optionAdapter.addData(traOption);
+        optionView.setAdapter(optionAdapter);
 
         duration = getTrafficData.getRoute().getTraoptimal().get(0).getSummary().getDuration() / 1000 / 60;
         distance = getTrafficData.getRoute().getTraoptimal().get(0).getSummary().getDistance() / 1000;
@@ -476,14 +450,14 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         tollFare = getTrafficData.getRoute().getTraoptimal().get(0).getSummary().getTollFare();
 
         if (duration / 60 == 0) {
-            durationTraoptimal.setText(duration + " 분");
+            traOption = new TrafficOption("최적", timeArrive[1] + " " + timeArrive[2], duration + " 분", distance + " km", tollFare + " 원");
         }
         else {
-            durationTraoptimal.setText(duration / 60 + " 시간 " + duration % 60 + " 분");
+            traOption = new TrafficOption("최적", timeArrive[1] + " " + timeArrive[2], duration / 60 + " 시간 " + duration % 60 + " 분", distance + " km", tollFare + " 원");
         }
-        distanceTraoptimal.setText(distance + " km");
-        timeArriveTraoptimal.setText(timeArrive[1] + " " + timeArrive[2]);
-        tollFareTraoptimal.setText(tollFare + " 원");
+        optionAdapter.addData(traOption);
+        optionView.setAdapter(optionAdapter);
+        optionAdapter.notifyDataSetChanged();
     }
 
     public void toNavigation() {

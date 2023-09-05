@@ -1,328 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    app:umanoDragView="@id/slideLayout"
-    app:umanoPanelHeight="120dp"
-    app:umanoFadeColor="#00FFFFFF"
     tools:context=".Destination" >
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/backgroundLayout"
+    <com.naver.maps.map.MapView
+        android:id="@+id/naverMap"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent" />
 
-        <com.naver.maps.map.MapView
-            android:id="@+id/naverMap"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <Button
+        android:id="@+id/btnGuide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="@string/guide"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:background="@drawable/custom_guide"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-        <Button
-            android:id="@+id/btnGuide"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:text="@string/guide"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:background="@drawable/custom_guide"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <LinearLayout
-        android:id="@+id/slideLayout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/optionView"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:orientation="vertical"
-        android:visibility="visible" >
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnGuide"/>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:orientation="vertical"
-            android:src="@drawable/slide" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:orientation="vertical"
-            android:background="@color/black" />
-
-        <LinearLayout
-            android:id="@+id/trafastLayout"
-            android:layout_width="match_parent"
-            android:layout_height="99dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:gravity="center"
-            android:orientation="horizontal" >
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="2"
-                android:padding="10dp"
-                android:gravity="center"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/trafastView"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:gravity="center"
-                    android:text="@string/trafast"
-                    android:textSize="20sp"
-                    android:textColor="@color/black" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="3"
-                android:padding="10dp"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/durationTrafast"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:gravity="center"
-                    android:hint="@string/duration"
-                    android:textSize="20sp"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/timeArriveTrafast"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:hint="@string/timeOfArrival"
-                    android:textSize="15sp"
-                    android:textColor="@color/black" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="2"
-                android:padding="10dp"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/distanceTrafast"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:gravity="right|center"
-                    android:hint="@string/distance"
-                    android:textSize="20sp"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/tollFareTrafast"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="10dp"
-                    android:gravity="right|center"
-                    android:hint="@string/fare"
-                    android:textSize="15sp"
-                    android:textColor="@color/black" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:orientation="vertical"
-            android:background="@color/black" />
-
-        <LinearLayout
-            android:id="@+id/tracomfortLayout"
-            android:layout_width="match_parent"
-            android:layout_height="99dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:gravity="center"
-            android:orientation="horizontal" >
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="2"
-                android:padding="10dp"
-                android:gravity="center"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/tracomfortView"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:gravity="center"
-                    android:text="@string/tracomfort"
-                    android:textSize="20sp"
-                    android:textColor="@color/black" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="3"
-                android:padding="10dp"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/durationTracomfort"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:gravity="center"
-                    android:hint="@string/duration"
-                    android:textSize="20sp"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/timeArriveTracomfort"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:hint="@string/timeOfArrival"
-                    android:textSize="15sp"
-                    android:textColor="@color/black" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="2"
-                android:padding="10dp"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/distanceTracomfort"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:gravity="right|center"
-                    android:hint="@string/distance"
-                    android:textSize="20sp"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/tollFareTracomfort"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="10dp"
-                    android:gravity="right|center"
-                    android:hint="@string/fare"
-                    android:textSize="15sp"
-                    android:textColor="@color/black" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:orientation="vertical"
-            android:background="@color/black" />
-
-        <LinearLayout
-            android:id="@+id/traoptimalLayout"
-            android:layout_width="match_parent"
-            android:layout_height="99dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:gravity="center"
-            android:orientation="horizontal" >
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="2"
-                android:padding="10dp"
-                android:gravity="center"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/traoptimalView"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:gravity="center"
-                    android:text="@string/traoptimal"
-                    android:textSize="20sp"
-                    android:textColor="@color/black" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="3"
-                android:padding="10dp"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/durationTraoptimal"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:gravity="center"
-                    android:hint="@string/duration"
-                    android:textSize="20sp"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/timeArriveTraoptimal"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:hint="@string/timeOfArrival"
-                    android:textSize="15sp"
-                    android:textColor="@color/black" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="2"
-                android:padding="10dp"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/distanceTraoptimal"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:gravity="right|center"
-                    android:hint="@string/distance"
-                    android:textSize="20sp"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:id="@+id/tollFareTraoptimal"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="10dp"
-                    android:gravity="right|center"
-                    android:hint="@string/fare"
-                    android:textSize="15sp"
-                    android:textColor="@color/black" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-</com.sothree.slidinguppanel.SlidingUpPanelLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
