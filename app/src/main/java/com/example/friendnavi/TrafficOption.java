@@ -4,9 +4,9 @@ public class TrafficOption {
 
     String option;      // 옵션
     String timeArrive;  // 도착 시간
-    String duration;       // 소요 시간
-    String distance;       // 거리
-    String tollFare;       // 톨비
+    String duration;    // 소요 시간
+    String distance;    // 거리
+    String tollFare;    // 톨비
 
     public TrafficOption (String option, String timeArrive, String duration, String distance, String tollFare) {
         this.option = option;

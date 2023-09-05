@@ -1,9 +1,11 @@
 package com.example.friendnavi;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,17 +17,13 @@ import java.util.ArrayList;
 public class TrafficOptionAdapter extends RecyclerView.Adapter<TrafficOptionAdapter.TrafficOptionViewHolder>{
 
     private ArrayList<TrafficOption> trafficOptionList;
-
-    private int oldPosition = 0;
-    private int selectedPosition = 0;
-
-    public TrafficOptionAdapter (ArrayList<TrafficOption> trafficOptionList) {
+    int selectedPosition;
+    public TrafficOptionAdapter () {
         trafficOptionList = new ArrayList<>();
-        this.trafficOptionList = trafficOptionList;
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View v, int position);
+        void onItemClick(View v, int selectedPosition);
     }
 
     private OnItemClickListener listener = null;
@@ -36,11 +34,13 @@ public class TrafficOptionAdapter extends RecyclerView.Adapter<TrafficOptionAdap
 
     public class TrafficOptionViewHolder extends RecyclerView.ViewHolder {
 
+        LinearLayout optionItem;
         TextView option;
         TextView distance;
         TextView duration;
         TextView timeArrive;
         TextView tollFare;
+
         Context context;
 
         public TrafficOptionViewHolder (Context context, View view) {
@@ -48,6 +48,7 @@ public class TrafficOptionAdapter extends RecyclerView.Adapter<TrafficOptionAdap
 
             this.context = context;
 
+            optionItem = view.findViewById(R.id.optionItem);
             option = view.findViewById(R.id.option);
             distance = view.findViewById(R.id.distance);
             duration = view.findViewById(R.id.duration);
@@ -57,10 +58,12 @@ public class TrafficOptionAdapter extends RecyclerView.Adapter<TrafficOptionAdap
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
+                    int selectPosition = getAdapterPosition();
+                    int oldPosition = 0;
+                    if (selectPosition != RecyclerView.NO_POSITION) {
                         if (listener != null) {
-                            listener.onItemClick(view, position);
+                            selectedPosition = selectPosition;
+                            listener.onItemClick(view, selectPosition);
                         }
                     }
                 }
@@ -89,31 +92,18 @@ public class TrafficOptionAdapter extends RecyclerView.Adapter<TrafficOptionAdap
         String distance = trafficOptionList.get(position).getDistance();
         String tollFare = trafficOptionList.get(position).getTollFare();
 
-        if (selectedPosition == position) {
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.context, R.color.theme));
-        }
-        else {
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.context, R.color.white));
-        }
-
-        int pos = position;
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                oldPosition = selectedPosition;
-                selectedPosition = pos;
-
-                notifyItemChanged(oldPosition);
-                notifyItemChanged(selectedPosition);
-            }
-        });
-
         holder.option.setText(option);
         holder.timeArrive.setText(timeArrive);
         holder.duration.setText(duration);
         holder.distance.setText(distance);
         holder.tollFare.setText(tollFare);
+
+        if (position == selectedPosition) {
+            holder.optionItem.setBackgroundColor(ContextCompat.getColor(holder.context, R.color.theme));
+        }
+        else {
+            holder.optionItem.setBackgroundColor(ContextCompat.getColor(holder.context, R.color.white));
+        }
     }
 
     @Override

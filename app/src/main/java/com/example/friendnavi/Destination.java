@@ -75,10 +75,6 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
     TrafficOptionAdapter optionAdapter;
     TrafficOption traOption;
 
-    ArrayList<TrafficOption> optionList;
-
-    int firstCheck = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +84,7 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         initRetrofit();
         initLoc();
         initSearchInfoView();
+        getSearchRoutes();
     }
 
     @Override
@@ -101,7 +98,6 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         super.onResume();
         Log.v(TAG, "onResume 호출");
 
-        getSearchRoutes();
 
         optionAdapter.setOnItemClickListener(new TrafficOptionAdapter.OnItemClickListener() {
             @Override
@@ -124,7 +120,7 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
                     drawPathTraoptimal(true);
                     trafficOption = "traoptimal";
                 }
-                firstCheck = 1;
+                optionAdapter.notifyDataSetChanged();
             }
         });
 
@@ -196,8 +192,7 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         dividerItemDecoration.setDrawable(this.getResources().getDrawable(R.drawable.divider_item_option));
         optionView.addItemDecoration(dividerItemDecoration);
 
-        optionList = new ArrayList<>();
-        optionAdapter = new TrafficOptionAdapter(optionList);
+        optionAdapter = new TrafficOptionAdapter();
     }
 
     public void setMapView(Bundle bundle) {
