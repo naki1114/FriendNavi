@@ -83,6 +83,8 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
 
     PathOverlay path;
 
+    private final int iconSize = 500;
+
     private Handler locationHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -93,14 +95,13 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
             naverMap.setCameraPosition(cameraPosition);
 
             LocationOverlay locationOverlay = naverMap.getLocationOverlay();
-            locationOverlay.setVisible(true);
+            locationOverlay.setIcon(OverlayImage.fromResource(R.drawable.navi_icon));
+            locationOverlay.setIconWidth(iconSize);
+            locationOverlay.setIconHeight(iconSize);
+            locationOverlay.setAnchor(new PointF(0.5f, 1));
             locationOverlay.setPosition(new LatLng(lat, lng));
             locationOverlay.setBearing(bearing);
-            locationOverlay.setSubIcon(OverlayImage.fromResource(R.drawable.pointer));
-            locationOverlay.setSubIconWidth(50);
-            locationOverlay.setSubIconHeight(50);
-            locationOverlay.setSubAnchor(new PointF(0.5f, 1));
-
+            locationOverlay.setVisible(true);
         }
     };
 
@@ -233,13 +234,12 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         naverMap.setCameraPosition(cameraPosition);
 
         LocationOverlay locationOverlay = naverMap.getLocationOverlay();
-        locationOverlay.setVisible(true);
+        locationOverlay.setIconWidth(iconSize);
+        locationOverlay.setIconHeight(iconSize);
+        locationOverlay.setAnchor(new PointF(0.5f, 1));
         locationOverlay.setPosition(new LatLng(lat, lng));
         locationOverlay.setBearing(bearing);
-        locationOverlay.setSubIcon(OverlayImage.fromResource(R.drawable.pointer));
-        locationOverlay.setSubIconWidth(50);
-        locationOverlay.setSubIconHeight(50);
-        locationOverlay.setSubAnchor(new PointF(0.5f, 1));
+        locationOverlay.setVisible(true);
 
         drawPath(trafficOption);
     }
@@ -283,13 +283,12 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
                             naverMap.setCameraPosition(cameraPosition);
 
                             LocationOverlay locationOverlay = naverMap.getLocationOverlay();
-                            locationOverlay.setVisible(true);
+                            locationOverlay.setIconWidth(iconSize);
+                            locationOverlay.setIconHeight(iconSize);
+                            locationOverlay.setAnchor(new PointF(0.5f, 1));
                             locationOverlay.setPosition(new LatLng(lat, lng));
                             locationOverlay.setBearing(bearing);
-                            locationOverlay.setSubIcon(OverlayImage.fromResource(R.drawable.pointer));
-                            locationOverlay.setSubIconWidth(50);
-                            locationOverlay.setSubIconHeight(50);
-                            locationOverlay.setSubAnchor(new PointF(0.5f, 1));
+                            locationOverlay.setVisible(true);
 
                         }
                     }
