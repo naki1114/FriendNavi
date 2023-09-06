@@ -33,6 +33,7 @@ import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.overlay.PathOverlay;
@@ -75,15 +76,17 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
 
     float mCurrentDegree = 0f;
 
-    int bearing = 0;
-    int zoomLevel = 19;
-
     TrafficData getTrafficData;
     String trafficOption;
 
     PathOverlay path;
 
-    private final int iconSize = 500;
+    private final int iconSize = 300;
+    private final int tilt = 50;
+    private final int zoomLevel = 17;
+    int bearing = 0;
+
+    private final int pathWidth = 100;
 
     private Handler locationHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -91,7 +94,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
             Location location = (Location) msg.obj;
             updateLocationUI(location);
             moveMap();
-            CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, 100, bearing);
+            CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, tilt, bearing);
             naverMap.setCameraPosition(cameraPosition);
 
             LocationOverlay locationOverlay = naverMap.getLocationOverlay();
@@ -230,10 +233,13 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
 
         naverMap.setMapType(NaverMap.MapType.Navi);
 
-        CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, 100, bearing);
+        setUi();
+
+        CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, tilt, bearing);
         naverMap.setCameraPosition(cameraPosition);
 
         LocationOverlay locationOverlay = naverMap.getLocationOverlay();
+        locationOverlay.setIcon(OverlayImage.fromResource(R.drawable.navi_icon));
         locationOverlay.setIconWidth(iconSize);
         locationOverlay.setIconHeight(iconSize);
         locationOverlay.setAnchor(new PointF(0.5f, 1));
@@ -242,6 +248,15 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         locationOverlay.setVisible(true);
 
         drawPath(trafficOption);
+    }
+
+    private void setUi() {
+        UiSettings uiSettings = naverMap.getUiSettings();
+
+        uiSettings.setCompassEnabled(false);
+        uiSettings.setScaleBarEnabled(false);
+        uiSettings.setLogoClickEnabled(false);
+        uiSettings.setLogoMargin(-500, 0, 0, -500);
     }
 
     private void startLocationUpdates() {
@@ -279,10 +294,11 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
 
                             }
                             i--;
-                            CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, 100, bearing);
+                            CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, tilt, bearing);
                             naverMap.setCameraPosition(cameraPosition);
 
                             LocationOverlay locationOverlay = naverMap.getLocationOverlay();
+                            locationOverlay.setIcon(OverlayImage.fromResource(R.drawable.navi_icon));
                             locationOverlay.setIconWidth(iconSize);
                             locationOverlay.setIconHeight(iconSize);
                             locationOverlay.setAnchor(new PointF(0.5f, 1));
@@ -351,7 +367,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
             path.setCoords(Arrays.asList(
                     new LatLng(pathList[i][1], pathList[i][0]),
                     new LatLng(pathList[i - 1][1], pathList[i - 1][0])));
-            path.setWidth(200);
+            path.setWidth(pathWidth);
             path.setOutlineWidth(0);
             path.setColor(Color.BLUE);
 
