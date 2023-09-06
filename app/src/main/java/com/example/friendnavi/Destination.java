@@ -75,6 +75,8 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
     TrafficOptionAdapter optionAdapter;
     TrafficOption traOption;
 
+    private double zoomLevel = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -207,8 +209,9 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         this.naverMap = naverMap;
 
         naverMap.setMapType(NaverMap.MapType.Navi);
+        naverMap.setContentPadding(0, 0, 0, 500);
 
-        CameraPosition cameraPosition = new CameraPosition(new LatLng((latStart + latGoal) / 2, (lngStart + lngGoal) / 2),13);
+        CameraPosition cameraPosition = new CameraPosition(new LatLng((latStart + latGoal) / 2, (lngStart + lngGoal) / 2), zoomLevel);
         naverMap.setCameraPosition(cameraPosition);
 
         Marker marker = new Marker();
@@ -221,7 +224,6 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         locationOverlay.setSubIconWidth(50);
         locationOverlay.setSubIconHeight(50);
         locationOverlay.setSubAnchor(new PointF(0.5f, 1));
-
     }
 
     public static Location findGeoPoint(Context context, String address) {
@@ -256,6 +258,10 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
             public void onResponse(Call<TrafficData> call, Response<TrafficData> response) {
                 getTrafficData = response.body();
                 setResult();
+                setZoomLevel();
+
+                CameraPosition cameraPosition = new CameraPosition(new LatLng((latStart + latGoal) / 2, (lngStart + lngGoal) / 2), zoomLevel);
+                naverMap.setCameraPosition(cameraPosition);
 
                 if(!getTrafficData.equals(null)) {
                     Log.v(TAG, "성공 : " + getTrafficData.getMessage());
@@ -275,6 +281,45 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
                 t.printStackTrace();
             }
         });
+    }
+
+    public void setZoomLevel() {
+        double[][] bbox = getTrafficData.getRoute().getTrafast().get(0).getSummary().getBbox();
+        double sizeLat = Math.abs(bbox[0][1] - bbox[1][1]);
+        double sizeLng = Math.abs(bbox[0][0] - bbox[1][0]);
+        Log.v(TAG, "Lat : " + sizeLat);
+        Log.v(TAG, "Lng : " + sizeLng);
+
+        if (sizeLat > 2.56 || sizeLng > 2.56) {
+            zoomLevel = 5.5;
+        }
+        else if (sizeLat > 1.28 || sizeLng > 1.28) {
+            zoomLevel = 6.5;
+        }
+        else if (sizeLat > 0.64 || sizeLng > 0.64) {
+            zoomLevel = 7.5;
+        }
+        else if (sizeLat > 0.32 || sizeLng > 0.32) {
+            zoomLevel = 8.5;
+        }
+        else if (sizeLat > 0.16 || sizeLng > 0.16) {
+            zoomLevel = 9.5;
+        }
+        else if (sizeLat > 0.08 || sizeLng > 0.08) {
+            zoomLevel = 10.5;
+        }
+        else if (sizeLat > 0.04 || sizeLng > 0.04) {
+            zoomLevel = 11.5;
+        }
+        else if (sizeLat > 0.02 || sizeLng > 0.02) {
+            zoomLevel = 12.5;
+        }
+        else if (sizeLat > 0.01 || sizeLng > 0.01) {
+            zoomLevel = 13.5;
+        }
+        else {
+            zoomLevel = 14.5;
+        }
     }
 
     public void drawPathTrafast(boolean check) {
