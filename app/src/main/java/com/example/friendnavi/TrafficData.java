@@ -202,7 +202,10 @@ public class TrafficData implements Serializable {
         @SerializedName("fuelPrice")
         int fuelPrice;
 
-        public Summary (int distance, int duration, int etaServiceType, String departureTime, int tollFare, int taxiFare, int fuelPrice) {
+        @SerializedName("bbox")
+        double[][] bbox;
+
+        public Summary (int distance, int duration, int etaServiceType, String departureTime, int tollFare, int taxiFare, int fuelPrice, double[][] bbox) {
             this.distance = distance;
             this.duration = duration;
             this.etaServiceType = etaServiceType;
@@ -210,6 +213,7 @@ public class TrafficData implements Serializable {
             this.tollFare = tollFare;
             this.taxiFare = taxiFare;
             this.fuelPrice = fuelPrice;
+            this.bbox = bbox;
         }
 
         public int getDistance() {
@@ -266,6 +270,14 @@ public class TrafficData implements Serializable {
 
         public void setFuelPrice(int fuelPrice) {
             this.fuelPrice = fuelPrice;
+        }
+
+        public double[][] getBbox() {
+            return bbox;
+        }
+
+        public void setBbox(double[][] bbox) {
+            this.bbox = bbox;
         }
 
     }
