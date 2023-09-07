@@ -81,10 +81,10 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
 
     PathOverlay path;
 
-    private final int iconSize = 300;
-    private final int tilt = 50;
-    private final int zoomLevel = 17;
-    int bearing = 0;
+    private final int TILT = 50;
+    private double zoomLevel = 17;
+    private int iconSize = 300;
+    private int bearing = 0;
 
     private final int pathWidth = 100;
 
@@ -93,8 +93,8 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         public void handleMessage(@NonNull Message msg) {
             Location location = (Location) msg.obj;
             updateLocationUI(location);
-            moveMap();
-            CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, tilt, bearing);
+            zoomLevel = naverMap.getCameraPosition().zoom;
+            CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, TILT, bearing);
             naverMap.setCameraPosition(cameraPosition);
 
             LocationOverlay locationOverlay = naverMap.getLocationOverlay();
@@ -235,7 +235,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
 
         setUi();
 
-        CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, tilt, bearing);
+        CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, TILT, bearing);
         naverMap.setCameraPosition(cameraPosition);
 
         LocationOverlay locationOverlay = naverMap.getLocationOverlay();
@@ -277,40 +277,6 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
     private void updateLocationUI(Location location) {
         lat = location.getLatitude();
         lng = location.getLongitude();
-    }
-
-    public void moveMap() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                locationHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (int i = 0; i < 1; i++) {
-                            try {
-                                Thread.sleep(1000);
-                            }
-                            catch (Exception e) {
-
-                            }
-                            i--;
-                            CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, tilt, bearing);
-                            naverMap.setCameraPosition(cameraPosition);
-
-                            LocationOverlay locationOverlay = naverMap.getLocationOverlay();
-                            locationOverlay.setIcon(OverlayImage.fromResource(R.drawable.navi_icon));
-                            locationOverlay.setIconWidth(iconSize);
-                            locationOverlay.setIconHeight(iconSize);
-                            locationOverlay.setAnchor(new PointF(0.5f, 1));
-                            locationOverlay.setPosition(new LatLng(lat, lng));
-                            locationOverlay.setBearing(bearing);
-                            locationOverlay.setVisible(true);
-
-                        }
-                    }
-                });
-            }
-        });
     }
 
     class SensorListener implements SensorEventListener {
