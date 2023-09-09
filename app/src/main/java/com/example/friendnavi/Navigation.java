@@ -35,6 +35,7 @@ import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.LocationOverlay;
+import com.naver.maps.map.overlay.MultipartPathOverlay;
 import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.overlay.PathOverlay;
 
@@ -79,14 +80,15 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
     TrafficData getTrafficData;
     String trafficOption;
 
-    PathOverlay path;
+    MultipartPathOverlay path;
 
     private final int TILT = 50;
     private double zoomLevel = 17;
     private int iconSize = 300;
     private int bearing = 0;
 
-    private final int pathWidth = 100;
+    private final int PATH_WIDTH = 50;
+    private final int PATH_PATTERN = 200;
 
     private Handler locationHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -324,24 +326,22 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         }
 
         int pathCount = pathList.length;
-        int guideCount = guideList.size();
-        path = new PathOverlay();
-        path.setMap(null);
 
-        for (int i = pathCount - 1; i > 0; i--) {
-            path = new PathOverlay();
-            path.setCoords(Arrays.asList(
-                    new LatLng(pathList[i][1], pathList[i][0]),
-                    new LatLng(pathList[i - 1][1], pathList[i - 1][0])));
-            path.setWidth(pathWidth);
-            path.setOutlineWidth(0);
-            path.setColor(Color.BLUE);
+        path = new MultipartPathOverlay();
 
-            if (i == guideList.get(guideCount - 1).getPointIndex() && guideCount > 1) {
-                guideCount--;
-            }
-            path.setMap(naverMap);
+        ArrayList<LatLng> pathLatLng = new ArrayList<>();
+
+        for (int i = 0; i < pathCount; i++) {
+            pathLatLng.add(new LatLng(pathList[i][1], pathList[i][0]));
         }
+
+        path.setCoordParts(Arrays.asList(pathLatLng));
+        path.setColorParts(Arrays.asList(new MultipartPathOverlay.ColorPart(Color.BLUE, Color.BLUE, Color.GRAY, Color.GRAY)));
+        path.setWidth(PATH_WIDTH);
+        path.setOutlineWidth(0);
+        path.setPatternImage(OverlayImage.fromResource(R.drawable.path_pattern));
+        path.setPatternInterval(PATH_PATTERN);
+        path.setMap(naverMap);
     }
 
 }
