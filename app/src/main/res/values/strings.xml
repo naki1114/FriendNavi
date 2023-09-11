@@ -72,4 +72,8 @@
     <string name="fare">통행료</string>
     <string name="timeOfArrival">도착 시간</string>
 
+    <!--네비게이션-->
+    <string name="navDistance">남은 거리</string>
+    <string name="navDuration">남은 시간</string>
+
 </resources>
