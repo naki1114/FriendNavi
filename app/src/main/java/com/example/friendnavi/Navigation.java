@@ -22,6 +22,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -30,6 +34,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
+import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
@@ -37,7 +42,6 @@ import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.overlay.MultipartPathOverlay;
 import com.naver.maps.map.overlay.OverlayImage;
-import com.naver.maps.map.overlay.PathOverlay;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +63,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
 
-    private static final int LOCATION_UPDATE_INTERVAL = 1000; // 1 seconds
+    private static int LOCATION_UPDATE_INTERVAL = 1000; // 1 seconds
 
     SensorManager mSensorManager;
     SensorListener mSensorListener;
@@ -90,23 +94,56 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
     private final int PATH_WIDTH = 50;
     private final int PATH_PATTERN = 200;
 
+    ImageButton btnCurrentPoint;
+    ImageButton btnReset;
+    ImageButton btnMenu;
+
+    TextView viewDistance;
+    TextView viewDuration;
+
+    TextView viewFirstCourse;
+    TextView viewFirstDistance;
+    TextView viewSecondCourse;
+    TextView viewSecondDistance;
+
+    LinearLayout secondCourse;
+
+    private boolean handlerCheck = true;
+
+    int guideCount;
+    int guideIndex = 0;
+
     private Handler locationHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
-            Location location = (Location) msg.obj;
-            updateLocationUI(location);
-            zoomLevel = naverMap.getCameraPosition().zoom;
-            CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, TILT, bearing);
-            naverMap.setCameraPosition(cameraPosition);
+            if (handlerCheck) {
+                Location location = (Location) msg.obj;
+                updateLocationUI(location);
+                zoomLevel = naverMap.getCameraPosition().zoom;
+                CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, TILT, bearing);
+                naverMap.setCameraPosition(cameraPosition);
 
-            LocationOverlay locationOverlay = naverMap.getLocationOverlay();
-            locationOverlay.setIcon(OverlayImage.fromResource(R.drawable.navi_icon));
-            locationOverlay.setIconWidth(iconSize);
-            locationOverlay.setIconHeight(iconSize);
-            locationOverlay.setAnchor(new PointF(0.5f, 1));
-            locationOverlay.setPosition(new LatLng(lat, lng));
-            locationOverlay.setBearing(bearing);
-            locationOverlay.setVisible(true);
+                LocationOverlay locationOverlay = naverMap.getLocationOverlay();
+                locationOverlay.setIcon(OverlayImage.fromResource(R.drawable.navi_icon));
+                locationOverlay.setIconWidth(iconSize);
+                locationOverlay.setIconHeight(iconSize);
+                locationOverlay.setAnchor(new PointF(0.5f, 1));
+                locationOverlay.setPosition(new LatLng(lat, lng));
+                locationOverlay.setBearing(bearing);
+                locationOverlay.setVisible(true);
+
+                setCourse();
+            }
+            else {
+                this.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        btnCurrentPoint.setVisibility(View.GONE);
+                        handlerCheck = true;
+                    }
+                }, 5000);
+
+            }
         }
     };
 
@@ -117,10 +154,12 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         Log.v(TAG, "onCreate 호출");
 
         setMapView(savedInstanceState);
+        initView();
         initLoc();
         initSensor();
         startSensor();
         getIntentTrafficData();
+        setStatus();
     }
 
     @Override
@@ -135,6 +174,14 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         Log.v(TAG, "onResume 호출");
 
         startLocationUpdates();
+
+        btnCurrentPoint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toCurrentPoint();
+                btnCurrentPoint.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
@@ -165,6 +212,22 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
     }
 
     // Custom Method
+
+    public void initView() {
+        btnCurrentPoint = findViewById(R.id.btnCurrentPoint);
+        btnReset = findViewById(R.id.btnReset);
+        btnMenu = findViewById(R.id.btnMenu);
+
+        viewDistance = findViewById(R.id.viewDistance);
+        viewDuration = findViewById(R.id.viewDuration);
+
+        viewFirstCourse = findViewById(R.id.viewFirstCourse);
+        viewFirstDistance = findViewById(R.id.viewFirstDistance);
+        viewSecondCourse = findViewById(R.id.viewSecondCourse);
+        viewSecondDistance = findViewById(R.id.viewSecondDistance);
+
+        secondCourse = findViewById(R.id.secondCourse);
+    }
 
     public void initLoc() {
 
@@ -220,6 +283,16 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         Intent intent = getIntent();
         getTrafficData = (TrafficData) intent.getSerializableExtra("trafficData");
         trafficOption = intent.getStringExtra("trafficOption");
+
+        if (trafficOption.equals("trafast")) {
+            guideCount = getTrafficData.getRoute().getTrafast().get(0).getGuide().size();
+        }
+        else if (trafficOption.equals("trafast")) {
+            guideCount = getTrafficData.getRoute().getTracomfort().get(0).getGuide().size();
+        }
+        else {
+            guideCount = getTrafficData.getRoute().getTraoptimal().get(0).getGuide().size();
+        }
     }
 
     public void setMapView(Bundle bundle) {
@@ -250,6 +323,19 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         locationOverlay.setVisible(true);
 
         drawPath(trafficOption);
+
+        naverMap.addOnCameraChangeListener(new NaverMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(int i, boolean b) {
+                if (i != 0) {
+                    btnCurrentPoint.setVisibility(View.VISIBLE);
+                    handlerCheck = false;
+                }
+                else {
+                    handlerCheck = true;
+                }
+            }
+        });
     }
 
     private void setUi() {
@@ -310,19 +396,15 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
 
     public void drawPath(String trafficOption) {
         double[][] pathList;
-        ArrayList<TrafficData.Guide> guideList;
 
         if (trafficOption.equals("trafast")) {
             pathList = getTrafficData.getRoute().getTrafast().get(0).getPath();
-            guideList = getTrafficData.getRoute().getTrafast().get(0).getGuide();
         }
         else if (trafficOption.equals("tracomfort")) {
             pathList = getTrafficData.getRoute().getTracomfort().get(0).getPath();
-            guideList = getTrafficData.getRoute().getTracomfort().get(0).getGuide();
         }
         else {
             pathList = getTrafficData.getRoute().getTraoptimal().get(0).getPath();
-            guideList = getTrafficData.getRoute().getTraoptimal().get(0).getGuide();
         }
 
         int pathCount = pathList.length;
@@ -342,6 +424,149 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         path.setPatternImage(OverlayImage.fromResource(R.drawable.path_pattern));
         path.setPatternInterval(PATH_PATTERN);
         path.setMap(naverMap);
+    }
+
+    private void toCurrentPoint() {
+        CameraUpdate cameraUpdate = CameraUpdate.scrollAndZoomTo(new LatLng(lat, lng), 17);
+        naverMap.moveCamera(cameraUpdate);
+    }
+
+    private void setStatus() {
+        int distance;
+        int duration;
+        int hour;
+        int minute;
+
+        if (trafficOption.equals("trafast")) {
+            distance = getTrafficData.getRoute().getTrafast().get(0).getSummary().getDistance();
+            duration = getTrafficData.getRoute().getTrafast().get(0).getSummary().getDuration() / 1000;
+        }
+        else if (trafficOption.equals("tracomfort")) {
+            distance = getTrafficData.getRoute().getTracomfort().get(0).getSummary().getDistance();
+            duration = getTrafficData.getRoute().getTracomfort().get(0).getSummary().getDuration() / 1000;
+        }
+        else {
+            distance = getTrafficData.getRoute().getTraoptimal().get(0).getSummary().getDistance();
+            duration = getTrafficData.getRoute().getTraoptimal().get(0).getSummary().getDuration() / 1000;
+        }
+
+        if (distance >= 1000) {
+            distance = distance / 1000;
+            viewDistance.setText(distance + " km");
+        }
+        else {
+            viewDistance.setText(distance + " m");
+        }
+
+        if (duration >= 3600) {
+            hour = duration / 60 / 60;
+            minute = duration / 60 % 60;
+            viewDuration.setText(hour + " 시간 " + minute + " 분");
+        }
+        else if (duration >= 60) {
+            minute = duration / 60;
+            viewDuration.setText(minute + " 분");
+        }
+        else {
+            viewDuration.setText("1분");
+        }
+    }
+
+    private void setCourse() {
+        TrafficCourse firstCourse = new TrafficCourse();
+
+        double[][] path;
+
+        int firstPointIndex;
+        int firstType;
+
+        int secondPointIndex;
+        int secondType;
+
+        if (trafficOption.equals("trafast")) {
+            path = getTrafficData.getRoute().getTrafast().get(0).getPath();
+            firstPointIndex = getTrafficData.getRoute().getTrafast().get(0).getGuide().get(guideIndex).getPointIndex();
+            firstType = getTrafficData.getRoute().getTrafast().get(0).getGuide().get(guideIndex).getType();
+            if (guideIndex < guideCount - 1) {
+                secondPointIndex = getTrafficData.getRoute().getTrafast().get(0).getGuide().get(guideIndex + 1).getPointIndex();
+                secondType = getTrafficData.getRoute().getTrafast().get(0).getGuide().get(guideIndex + 1).getType();
+            }
+            else {
+                secondPointIndex = getTrafficData.getRoute().getTrafast().get(0).getGuide().get(guideIndex).getPointIndex();
+                secondType = getTrafficData.getRoute().getTrafast().get(0).getGuide().get(guideIndex).getType();
+                secondCourse.setVisibility(View.GONE);
+            }
+        }
+        else if (trafficOption.equals("tracomfort")) {
+            path = getTrafficData.getRoute().getTracomfort().get(0).getPath();
+            firstPointIndex = getTrafficData.getRoute().getTracomfort().get(0).getGuide().get(guideIndex).getPointIndex();
+            firstType = getTrafficData.getRoute().getTracomfort().get(0).getGuide().get(guideIndex).getType();
+            if (guideIndex < guideCount - 1) {
+                secondPointIndex = getTrafficData.getRoute().getTracomfort().get(0).getGuide().get(guideIndex + 1).getPointIndex();
+                secondType = getTrafficData.getRoute().getTracomfort().get(0).getGuide().get(guideIndex + 1).getType();
+            }
+            else {
+                secondPointIndex = getTrafficData.getRoute().getTracomfort().get(0).getGuide().get(guideIndex).getPointIndex();
+                secondType = getTrafficData.getRoute().getTracomfort().get(0).getGuide().get(guideIndex).getType();
+                secondCourse.setVisibility(View.GONE);
+            }
+        }
+        else {
+            path = getTrafficData.getRoute().getTraoptimal().get(0).getPath();
+            firstPointIndex = getTrafficData.getRoute().getTraoptimal().get(0).getGuide().get(guideIndex).getPointIndex();
+            firstType = getTrafficData.getRoute().getTraoptimal().get(0).getGuide().get(guideIndex).getType();
+            if (guideIndex < guideCount - 1) {
+                secondPointIndex = getTrafficData.getRoute().getTraoptimal().get(0).getGuide().get(guideIndex + 1).getPointIndex();
+                secondType = getTrafficData.getRoute().getTraoptimal().get(0).getGuide().get(guideIndex + 1).getType();
+            }
+            else {
+                secondPointIndex = getTrafficData.getRoute().getTraoptimal().get(0).getGuide().get(guideIndex).getPointIndex();
+                secondType = getTrafficData.getRoute().getTraoptimal().get(0).getGuide().get(guideIndex).getType();
+                secondCourse.setVisibility(View.GONE);
+            }
+        }
+
+        double firstLat = path[firstPointIndex][1];
+        double firstLng = path[firstPointIndex][0];
+        double secondLat = path[secondPointIndex][1];
+        double secondLng = path[secondPointIndex][0];
+
+        Location currentLoc = new Location("current");
+        Location firstLoc = new Location("first");
+        Location secondLoc = new Location("second");
+
+        currentLoc.setLatitude(lat);
+        currentLoc.setLongitude(lng);
+        firstLoc.setLatitude(firstLat);
+        firstLoc.setLongitude(firstLng);
+        secondLoc.setLatitude(secondLat);
+        secondLoc.setLongitude(secondLng);
+
+        int firstDistance = (int) currentLoc.distanceTo(firstLoc);
+        int secondDistance = (int) firstLoc.distanceTo(secondLoc);
+
+        viewFirstCourse.setText(firstCourse.getCourse(firstType));
+        viewSecondCourse.setText(firstCourse.getCourse(secondType));
+
+        if (firstDistance >= 1000) {
+            firstDistance /= 1000;
+            viewFirstDistance.setText(firstDistance + " km");
+        }
+        else {
+            viewFirstDistance.setText(firstDistance + " m");
+        }
+
+        if (secondDistance >= 1000) {
+            secondDistance /= 1000;
+            viewSecondDistance.setText(secondDistance + " km");
+        }
+        else {
+            viewSecondDistance.setText(secondDistance + " m");
+        }
+
+        if (firstDistance < 15 && guideIndex < guideCount - 1) {
+            guideIndex++;
+        }
     }
 
 }
