@@ -76,4 +76,9 @@
     <string name="navDistance">남은 거리</string>
     <string name="navDuration">남은 시간</string>
 
+    <string name="firstCourse">다음 코스</string>
+    <string name="secondCourse">다다음 코스</string>
+    <string name="firstDistance">다음 거리</string>
+    <string name="secondDistance">다다음 거리</string>
+
 </resources>
