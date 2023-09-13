@@ -521,6 +521,7 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         toNavigationActivity.putExtra("trafficData", getTrafficData);
         toNavigationActivity.putExtra("trafficOption", trafficOption);
         startActivity(toNavigationActivity);
+        finish();
     }
 
 }
