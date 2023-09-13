@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -106,7 +107,9 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
     TextView viewSecondCourse;
     TextView viewSecondDistance;
 
+    LinearLayout firstCourse;
     LinearLayout secondCourse;
+    LinearLayout statusBar;
 
     private boolean handlerCheck = true;
 
@@ -226,7 +229,9 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         viewSecondCourse = findViewById(R.id.viewSecondCourse);
         viewSecondDistance = findViewById(R.id.viewSecondDistance);
 
+        firstCourse = findViewById(R.id.firstCourse);
         secondCourse = findViewById(R.id.secondCourse);
+        statusBar = findViewById(R.id.statusBar);
     }
 
     public void initLoc() {
@@ -567,6 +572,17 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         if (firstDistance < 20 && guideIndex < guideCount - 1) {
             guideIndex++;
         }
+
+        if (firstDistance < 20 && guideIndex == guideCount - 1) {
+            finishGuide();
+        }
+    }
+
+    private void finishGuide() {
+        Toast.makeText(getApplicationContext(), "경로 안내를 종료합니다.", Toast.LENGTH_LONG).show();
+
+        firstCourse.setVisibility(View.GONE);
+        statusBar.setVisibility(View.GONE);
     }
 
 }
