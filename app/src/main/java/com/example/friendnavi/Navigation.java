@@ -487,7 +487,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
             path = getTrafficData.getRoute().getTrafast().get(0).getPath();
             firstPointIndex = getTrafficData.getRoute().getTrafast().get(0).getGuide().get(guideIndex).getPointIndex();
             firstType = getTrafficData.getRoute().getTrafast().get(0).getGuide().get(guideIndex).getType();
-            if (guideIndex < guideCount - 1) {
+            if (guideIndex != guideCount - 1) {
                 secondPointIndex = getTrafficData.getRoute().getTrafast().get(0).getGuide().get(guideIndex + 1).getPointIndex();
                 secondType = getTrafficData.getRoute().getTrafast().get(0).getGuide().get(guideIndex + 1).getType();
             }
@@ -501,7 +501,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
             path = getTrafficData.getRoute().getTracomfort().get(0).getPath();
             firstPointIndex = getTrafficData.getRoute().getTracomfort().get(0).getGuide().get(guideIndex).getPointIndex();
             firstType = getTrafficData.getRoute().getTracomfort().get(0).getGuide().get(guideIndex).getType();
-            if (guideIndex < guideCount - 1) {
+            if (guideIndex != guideCount - 1) {
                 secondPointIndex = getTrafficData.getRoute().getTracomfort().get(0).getGuide().get(guideIndex + 1).getPointIndex();
                 secondType = getTrafficData.getRoute().getTracomfort().get(0).getGuide().get(guideIndex + 1).getType();
             }
@@ -515,7 +515,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
             path = getTrafficData.getRoute().getTraoptimal().get(0).getPath();
             firstPointIndex = getTrafficData.getRoute().getTraoptimal().get(0).getGuide().get(guideIndex).getPointIndex();
             firstType = getTrafficData.getRoute().getTraoptimal().get(0).getGuide().get(guideIndex).getType();
-            if (guideIndex < guideCount - 1) {
+            if (guideIndex != guideCount - 1) {
                 secondPointIndex = getTrafficData.getRoute().getTraoptimal().get(0).getGuide().get(guideIndex + 1).getPointIndex();
                 secondType = getTrafficData.getRoute().getTraoptimal().get(0).getGuide().get(guideIndex + 1).getType();
             }
@@ -564,7 +564,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
             viewSecondDistance.setText(secondDistance + " m");
         }
 
-        if (firstDistance < 15 && guideIndex < guideCount - 1) {
+        if (firstDistance < 20 && guideIndex < guideCount - 1) {
             guideIndex++;
         }
     }
