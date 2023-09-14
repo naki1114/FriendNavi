@@ -66,7 +66,9 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
 
     TrafficData getTrafficData;
 
-    MultipartPathOverlay path;
+    MultipartPathOverlay pathTrafast = new MultipartPathOverlay();
+    MultipartPathOverlay pathTracomfort = new MultipartPathOverlay();
+    MultipartPathOverlay pathTraoptimal = new MultipartPathOverlay();
 
     RecyclerView optionView;
     TrafficOptionAdapter optionAdapter;
@@ -326,8 +328,8 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         ArrayList<TrafficData.Guide> guideList = getTrafficData.getRoute().getTrafast().get(0).getGuide();
         int pathCount = pathList.length;
         int guideCount = 0;
-        path = new MultipartPathOverlay();
-        path.setMap(null);
+
+        pathTrafast.setMap(null);
 
         List<List<LatLng>> pathLatLng = new ArrayList<>();
         ArrayList<MultipartPathOverlay.ColorPart> pathColor = new ArrayList<>();
@@ -356,11 +358,11 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
             }
         }
 
-        path.setCoordParts(pathLatLng);
-        path.setColorParts(pathColor);
-        path.setWidth(PATH_WIDTH);
-        path.setOutlineWidth(0);
-        path.setMap(naverMap);
+        pathTrafast.setCoordParts(pathLatLng);
+        pathTrafast.setColorParts(pathColor);
+        pathTrafast.setWidth(PATH_WIDTH);
+        pathTrafast.setOutlineWidth(0);
+        pathTrafast.setMap(naverMap);
     }
 
     public void drawPathTracomfort(boolean check) {
@@ -368,8 +370,8 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         ArrayList<TrafficData.Guide> guideList = getTrafficData.getRoute().getTracomfort().get(0).getGuide();
         int pathCount = pathList.length;
         int guideCount = 0;
-        path = new MultipartPathOverlay();
-        path.setMap(null);
+
+        pathTracomfort.setMap(null);
 
         List<List<LatLng>> pathLatLng = new ArrayList<>();
         ArrayList<MultipartPathOverlay.ColorPart> pathColor = new ArrayList<>();
@@ -398,11 +400,11 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
             }
         }
 
-        path.setCoordParts(pathLatLng);
-        path.setColorParts(pathColor);
-        path.setWidth(PATH_WIDTH);
-        path.setOutlineWidth(0);
-        path.setMap(naverMap);
+        pathTracomfort.setCoordParts(pathLatLng);
+        pathTracomfort.setColorParts(pathColor);
+        pathTracomfort.setWidth(PATH_WIDTH);
+        pathTracomfort.setOutlineWidth(0);
+        pathTracomfort.setMap(naverMap);
     }
 
     public void drawPathTraoptimal(boolean check) {
@@ -410,8 +412,8 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         ArrayList<TrafficData.Guide> guideList = getTrafficData.getRoute().getTraoptimal().get(0).getGuide();
         int pathCount = pathList.length;
         int guideCount = 0;
-        path = new MultipartPathOverlay();
-        path.setMap(null);
+
+        pathTraoptimal.setMap(null);
 
         List<List<LatLng>> pathLatLng = new ArrayList<>();
         ArrayList<MultipartPathOverlay.ColorPart> pathColor = new ArrayList<>();
@@ -440,11 +442,11 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
             }
         }
 
-        path.setCoordParts(pathLatLng);
-        path.setColorParts(pathColor);
-        path.setWidth(PATH_WIDTH);
-        path.setOutlineWidth(0);
-        path.setMap(naverMap);
+        pathTraoptimal.setCoordParts(pathLatLng);
+        pathTraoptimal.setColorParts(pathColor);
+        pathTraoptimal.setWidth(PATH_WIDTH);
+        pathTraoptimal.setOutlineWidth(0);
+        pathTraoptimal.setMap(naverMap);
     }
 
     public double speedPath(int distance, int duration) {
