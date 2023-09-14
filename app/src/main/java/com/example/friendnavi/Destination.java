@@ -325,43 +325,39 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         double[][] pathList = getTrafficData.getRoute().getTrafast().get(0).getPath();
         ArrayList<TrafficData.Guide> guideList = getTrafficData.getRoute().getTrafast().get(0).getGuide();
         int pathCount = pathList.length;
-        int guideCount = guideList.size();
+        int guideCount = 0;
         path = new MultipartPathOverlay();
         path.setMap(null);
 
-        ArrayList<LatLng> pathLatLng = new ArrayList<>();
+        List<List<LatLng>> pathLatLng = new ArrayList<>();
         ArrayList<MultipartPathOverlay.ColorPart> pathColor = new ArrayList<>();
 
-        for (int i = 0; i < pathCount; i++) {
-            pathLatLng.add(new LatLng(pathList[i][1], pathList[i][0]));
+        for (int i = 0; i < pathCount - 1; i++) {
+            double speed = speedPath(guideList.get(guideCount).getDistance(), guideList.get(guideCount).getDuration());
+            pathLatLng.add(Arrays.asList(new LatLng(pathList[i][1], pathList[i][0]), new LatLng(pathList[i + 1][1], pathList[i + 1][0])));
 
-//            if (check == true) {
-//                if (speedPath(guideList.get(guideCount - 1).getDistance(), guideList.get(guideCount - 1).getDuration()) >= 70) {
-//                    path.setColor(Color.GREEN);
-//                }
-//                else if (speedPath(guideList.get(guideCount - 1).getDistance(), guideList.get(guideCount - 1).getDuration()) >= 40) {
-//                    path.setColor(Color.YELLOW);
-//                }
-//                else {
-//                    path.setColor(Color.RED);
-//                }
-//            }
-//            else {
-//                path.setColor(Color.GRAY);
-//            }
-//
-//            if (i == guideList.get(guideCount - 1).getPointIndex() && guideCount > 1) {
-//                guideCount--;
-//            }
+            if (check == true) {
+                if (speed >= 0.0195) {
+                    pathColor.add(new MultipartPathOverlay.ColorPart(Color.GREEN, Color.GREEN, Color.GRAY, Color.GRAY));
+                }
+                else if (speed >= 0.0111) {
+                    pathColor.add(new MultipartPathOverlay.ColorPart(Color.YELLOW, Color.YELLOW, Color.GRAY, Color.GRAY));
+                }
+                else {
+                    pathColor.add(new MultipartPathOverlay.ColorPart(Color.RED, Color.RED, Color.GRAY, Color.GRAY));
+                }
+            }
+            else {
+                pathColor.add(new MultipartPathOverlay.ColorPart(Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY));
+            }
+
+            if (i == guideList.get(guideCount).getPointIndex() && guideCount < guideList.size() - 1) {
+                guideCount++;
+            }
         }
 
-        path.setCoordParts(Arrays.asList(pathLatLng));
-        if (check == true) {
-            path.setColorParts(Arrays.asList(new MultipartPathOverlay.ColorPart(Color.BLUE, Color.BLUE, Color.GRAY, Color.GRAY)));
-        }
-        else {
-            path.setColorParts(Arrays.asList(new MultipartPathOverlay.ColorPart(Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY)));
-        }
+        path.setCoordParts(pathLatLng);
+        path.setColorParts(pathColor);
         path.setWidth(PATH_WIDTH);
         path.setOutlineWidth(0);
         path.setMap(naverMap);
@@ -371,43 +367,39 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         double[][] pathList = getTrafficData.getRoute().getTracomfort().get(0).getPath();
         ArrayList<TrafficData.Guide> guideList = getTrafficData.getRoute().getTracomfort().get(0).getGuide();
         int pathCount = pathList.length;
-        int guideCount = guideList.size();
+        int guideCount = 0;
         path = new MultipartPathOverlay();
         path.setMap(null);
 
-        ArrayList<LatLng> pathLatLng = new ArrayList<>();
+        List<List<LatLng>> pathLatLng = new ArrayList<>();
         ArrayList<MultipartPathOverlay.ColorPart> pathColor = new ArrayList<>();
 
-        for (int i = 0; i < pathCount; i++) {
-            pathLatLng.add(new LatLng(pathList[i][1], pathList[i][0]));
+        for (int i = 0; i < pathCount - 1; i++) {
+            double speed = speedPath(guideList.get(guideCount).getDistance(), guideList.get(guideCount).getDuration());
+            pathLatLng.add(Arrays.asList(new LatLng(pathList[i][1], pathList[i][0]), new LatLng(pathList[i + 1][1], pathList[i + 1][0])));
 
-//            if (check == true) {
-//                if (speedPath(guideList.get(guideCount - 1).getDistance(), guideList.get(guideCount - 1).getDuration()) >= 70) {
-//                    path.setColor(Color.GREEN);
-//                }
-//                else if (speedPath(guideList.get(guideCount - 1).getDistance(), guideList.get(guideCount - 1).getDuration()) >= 40) {
-//                    path.setColor(Color.YELLOW);
-//                }
-//                else {
-//                    path.setColor(Color.RED);
-//                }
-//            }
-//            else {
-//                path.setColor(Color.GRAY);
-//            }
-//
-//            if (i == guideList.get(guideCount - 1).getPointIndex() && guideCount > 1) {
-//                guideCount--;
-//            }
+            if (check == true) {
+                if (speed >= 0.0195) {
+                    pathColor.add(new MultipartPathOverlay.ColorPart(Color.GREEN, Color.GREEN, Color.GRAY, Color.GRAY));
+                }
+                else if (speed >= 0.0111) {
+                    pathColor.add(new MultipartPathOverlay.ColorPart(Color.YELLOW, Color.YELLOW, Color.GRAY, Color.GRAY));
+                }
+                else {
+                    pathColor.add(new MultipartPathOverlay.ColorPart(Color.RED, Color.RED, Color.GRAY, Color.GRAY));
+                }
+            }
+            else {
+                pathColor.add(new MultipartPathOverlay.ColorPart(Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY));
+            }
+
+            if (i == guideList.get(guideCount).getPointIndex() && guideCount < guideList.size() - 1) {
+                guideCount++;
+            }
         }
 
-        path.setCoordParts(Arrays.asList(pathLatLng));
-        if (check == true) {
-            path.setColorParts(Arrays.asList(new MultipartPathOverlay.ColorPart(Color.BLUE, Color.BLUE, Color.GRAY, Color.GRAY)));
-        }
-        else {
-            path.setColorParts(Arrays.asList(new MultipartPathOverlay.ColorPart(Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY)));
-        }
+        path.setCoordParts(pathLatLng);
+        path.setColorParts(pathColor);
         path.setWidth(PATH_WIDTH);
         path.setOutlineWidth(0);
         path.setMap(naverMap);
@@ -417,55 +409,46 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         double[][] pathList = getTrafficData.getRoute().getTraoptimal().get(0).getPath();
         ArrayList<TrafficData.Guide> guideList = getTrafficData.getRoute().getTraoptimal().get(0).getGuide();
         int pathCount = pathList.length;
-        int guideCount = guideList.size();
+        int guideCount = 0;
         path = new MultipartPathOverlay();
         path.setMap(null);
 
-        ArrayList<LatLng> pathLatLng = new ArrayList<>();
+        List<List<LatLng>> pathLatLng = new ArrayList<>();
         ArrayList<MultipartPathOverlay.ColorPart> pathColor = new ArrayList<>();
 
-        for (int i = 0; i < pathCount; i++) {
-            pathLatLng.add(new LatLng(pathList[i][1], pathList[i][0]));
+        for (int i = 0; i < pathCount - 1; i++) {
+            double speed = speedPath(guideList.get(guideCount).getDistance(), guideList.get(guideCount).getDuration());
+            pathLatLng.add(Arrays.asList(new LatLng(pathList[i][1], pathList[i][0]), new LatLng(pathList[i + 1][1], pathList[i + 1][0])));
 
-//            if (check == true) {
-//                if (speedPath(guideList.get(guideCount - 1).getDistance(), guideList.get(guideCount - 1).getDuration()) >= 70) {
-//                    path.setColor(Color.GREEN);
-//                }
-//                else if (speedPath(guideList.get(guideCount - 1).getDistance(), guideList.get(guideCount - 1).getDuration()) >= 40) {
-//                    path.setColor(Color.YELLOW);
-//                }
-//                else {
-//                    path.setColor(Color.RED);
-//                }
-//            }
-//            else {
-//                path.setColor(Color.GRAY);
-//            }
-//
-//            if (i == guideList.get(guideCount - 1).getPointIndex() && guideCount > 1) {
-//                guideCount--;
-//            }
+            if (check == true) {
+                if (speed >= 0.0195) {
+                    pathColor.add(new MultipartPathOverlay.ColorPart(Color.GREEN, Color.GREEN, Color.GRAY, Color.GRAY));
+                }
+                else if (speed >= 0.0111) {
+                    pathColor.add(new MultipartPathOverlay.ColorPart(Color.YELLOW, Color.YELLOW, Color.GRAY, Color.GRAY));
+                }
+                else {
+                    pathColor.add(new MultipartPathOverlay.ColorPart(Color.RED, Color.RED, Color.GRAY, Color.GRAY));
+                }
+            }
+            else {
+                pathColor.add(new MultipartPathOverlay.ColorPart(Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY));
+            }
+
+            if (i == guideList.get(guideCount).getPointIndex() && guideCount < guideList.size() - 1) {
+                guideCount++;
+            }
         }
 
-        path.setCoordParts(Arrays.asList(pathLatLng));
-        if (check == true) {
-            path.setColorParts(Arrays.asList(new MultipartPathOverlay.ColorPart(Color.BLUE, Color.BLUE, Color.GRAY, Color.GRAY)));
-        }
-        else {
-            path.setColorParts(Arrays.asList(new MultipartPathOverlay.ColorPart(Color.GRAY, Color.GRAY, Color.GRAY, Color.GRAY)));
-        }
+        path.setCoordParts(pathLatLng);
+        path.setColorParts(pathColor);
         path.setWidth(PATH_WIDTH);
         path.setOutlineWidth(0);
         path.setMap(naverMap);
     }
 
     public double speedPath(int distance, int duration) {
-        double dis = distance / 1000;           // m -> km
-        double dur = duration / 1000 / 60 / 60; // ms -> h
-
-        double speed = dis / dur;
-
-        return speed;
+        return (double) distance / (double) duration;
     }
 
     public void setResult() {
