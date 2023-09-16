@@ -11,4 +11,6 @@
     <!--custom-->
     <color name="theme">#FFF0D8FF</color>
     <color name="sign">#FF006000</color>
+    <color name="blue">#FF0077FF</color>
+    <color name="red">#FFFF0000</color>
 </resources>
