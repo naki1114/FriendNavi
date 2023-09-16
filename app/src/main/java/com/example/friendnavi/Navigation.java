@@ -91,6 +91,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
     private double zoomLevel = 17;
     private int iconSize = 300;
     private int bearing = 0;
+    private int preBearing = 0;
 
     private final int PATH_WIDTH = 50;
     private final int PATH_PATTERN = 200;
@@ -123,7 +124,11 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
                 Location location = (Location) msg.obj;
                 updateLocationUI(location);
                 zoomLevel = naverMap.getCameraPosition().zoom;
-                CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, TILT, bearing);
+
+                if (bearing - preBearing > 5 || bearing - preBearing < -5)  {
+                    preBearing = bearing;
+                }
+                CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, TILT, preBearing);
                 naverMap.setCameraPosition(cameraPosition);
 
                 LocationOverlay locationOverlay = naverMap.getLocationOverlay();
@@ -132,7 +137,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
                 locationOverlay.setIconHeight(iconSize);
                 locationOverlay.setAnchor(new PointF(0.5f, 1));
                 locationOverlay.setPosition(new LatLng(lat, lng));
-                locationOverlay.setBearing(bearing);
+                locationOverlay.setBearing(preBearing);
                 locationOverlay.setVisible(true);
 
                 setCourse();
@@ -315,7 +320,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
 
         setUi();
 
-        CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, TILT, bearing);
+        CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, TILT, preBearing);
         naverMap.setCameraPosition(cameraPosition);
 
         LocationOverlay locationOverlay = naverMap.getLocationOverlay();
@@ -324,7 +329,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         locationOverlay.setIconHeight(iconSize);
         locationOverlay.setAnchor(new PointF(0.5f, 1));
         locationOverlay.setPosition(new LatLng(lat, lng));
-        locationOverlay.setBearing(bearing);
+        locationOverlay.setBearing(preBearing);
         locationOverlay.setVisible(true);
 
         drawPath(trafficOption);
