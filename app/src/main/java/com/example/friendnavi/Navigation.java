@@ -57,6 +57,8 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
     LocationManager lm;
     Location currentLocation;
 
+    double preLat;
+    double preLng;
     double lat;
     double lng;
 
@@ -128,7 +130,13 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
                 if (bearing - preBearing > 5 || bearing - preBearing < -5)  {
                     preBearing = bearing;
                 }
-                CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, TILT, preBearing);
+                int errDistance = calDistance(preLat, preLng, lat, lng);
+
+                if (errDistance > 10) {
+                    preLat = lat;
+                    preLng = lng;
+                }
+                CameraPosition cameraPosition = new CameraPosition(new LatLng(preLat, preLng), zoomLevel, TILT, preBearing);
                 naverMap.setCameraPosition(cameraPosition);
 
                 LocationOverlay locationOverlay = naverMap.getLocationOverlay();
@@ -136,7 +144,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
                 locationOverlay.setIconWidth(iconSize);
                 locationOverlay.setIconHeight(iconSize);
                 locationOverlay.setAnchor(new PointF(0.5f, 1));
-                locationOverlay.setPosition(new LatLng(lat, lng));
+                locationOverlay.setPosition(new LatLng(preLat, preLng));
                 locationOverlay.setBearing(preBearing);
                 locationOverlay.setVisible(true);
 
@@ -250,6 +258,8 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
 
         lat = currentLocation.getLatitude();
         lng = currentLocation.getLongitude();
+        preLat = lat;
+        preLng = lng;
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(Navigation.this);
 
@@ -320,7 +330,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
 
         setUi();
 
-        CameraPosition cameraPosition = new CameraPosition(new LatLng(lat, lng), zoomLevel, TILT, preBearing);
+        CameraPosition cameraPosition = new CameraPosition(new LatLng(preLat, preLng), zoomLevel, TILT, preBearing);
         naverMap.setCameraPosition(cameraPosition);
 
         LocationOverlay locationOverlay = naverMap.getLocationOverlay();
@@ -328,7 +338,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         locationOverlay.setIconWidth(iconSize);
         locationOverlay.setIconHeight(iconSize);
         locationOverlay.setAnchor(new PointF(0.5f, 1));
-        locationOverlay.setPosition(new LatLng(lat, lng));
+        locationOverlay.setPosition(new LatLng(preLat, preLng));
         locationOverlay.setBearing(preBearing);
         locationOverlay.setVisible(true);
 
@@ -437,7 +447,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
     }
 
     private void toCurrentPoint() {
-        CameraUpdate cameraUpdate = CameraUpdate.scrollAndZoomTo(new LatLng(lat, lng), 17);
+        CameraUpdate cameraUpdate = CameraUpdate.scrollAndZoomTo(new LatLng(preLat, preLng), 17);
         naverMap.moveCamera(cameraUpdate);
     }
 
@@ -541,19 +551,19 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         double secondLat = path[secondPointIndex][1];
         double secondLng = path[secondPointIndex][0];
 
-        Location currentLoc = new Location("current");
-        Location firstLoc = new Location("first");
-        Location secondLoc = new Location("second");
+//        Location currentLoc = new Location("current");
+//        Location firstLoc = new Location("first");
+//        Location secondLoc = new Location("second");
+//
+//        currentLoc.setLatitude(lat);
+//        currentLoc.setLongitude(lng);
+//        firstLoc.setLatitude(firstLat);
+//        firstLoc.setLongitude(firstLng);
+//        secondLoc.setLatitude(secondLat);
+//        secondLoc.setLongitude(secondLng);
 
-        currentLoc.setLatitude(lat);
-        currentLoc.setLongitude(lng);
-        firstLoc.setLatitude(firstLat);
-        firstLoc.setLongitude(firstLng);
-        secondLoc.setLatitude(secondLat);
-        secondLoc.setLongitude(secondLng);
-
-        int firstDistance = (int) currentLoc.distanceTo(firstLoc);
-        int secondDistance = (int) firstLoc.distanceTo(secondLoc);
+        int firstDistance = calDistance(lat, lng, firstLat, firstLng);
+        int secondDistance = calDistance(firstLat, firstLng, secondLat, secondLng);
 
         viewFirstCourse.setText(firstCourse.getCourse(firstType));
         viewSecondCourse.setText(firstCourse.getCourse(secondType));
@@ -588,6 +598,20 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
 
         firstCourse.setVisibility(View.GONE);
         statusBar.setVisibility(View.GONE);
+    }
+
+    private int calDistance(double firstLat, double firstLng, double secondLat, double secondLng) {
+        Location firstLocation = new Location("firstLocation");
+        Location secondLocation = new Location("secondLocation");
+
+        firstLocation.setLatitude(firstLat);
+        firstLocation.setLongitude(firstLng);
+        secondLocation.setLatitude(secondLat);
+        secondLocation.setLongitude(secondLng);
+
+        int distance = (int) firstLocation.distanceTo(secondLocation);
+
+        return distance;
     }
 
 }
