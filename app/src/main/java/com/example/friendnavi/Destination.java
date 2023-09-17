@@ -504,6 +504,8 @@ public class Destination extends AppCompatActivity implements OnMapReadyCallback
         Intent toNavigationActivity = new Intent(getApplicationContext(), Navigation.class);
         toNavigationActivity.putExtra("trafficData", getTrafficData);
         toNavigationActivity.putExtra("trafficOption", trafficOption);
+        toNavigationActivity.putExtra("goalLat",latGoal);
+        toNavigationActivity.putExtra("goalLng",lngGoal);
         startActivity(toNavigationActivity);
         finish();
     }
