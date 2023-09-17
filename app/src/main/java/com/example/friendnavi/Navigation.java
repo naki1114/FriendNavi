@@ -47,6 +47,10 @@ import com.naver.maps.map.overlay.OverlayImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class Navigation extends AppCompatActivity implements OnMapReadyCallback {
 
     String TAG = "네비게이션 페이지";
@@ -59,8 +63,12 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
 
     double preLat;
     double preLng;
+
     double lat;
     double lng;
+
+    double goalLat;
+    double goalLng;
 
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
@@ -119,6 +127,12 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
     int guideCount;
     int guideIndex = 0;
 
+    int realTimeDistance;
+    int realTimeDuration;
+
+    int totalHour;
+    int totalMinute;
+
     private Handler locationHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -149,6 +163,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
                 locationOverlay.setVisible(true);
 
                 setCourse();
+                realtimeTraffic();
             }
             else {
                 this.postDelayed(new Runnable() {
@@ -303,6 +318,8 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         Intent intent = getIntent();
         getTrafficData = (TrafficData) intent.getSerializableExtra("trafficData");
         trafficOption = intent.getStringExtra("trafficOption");
+        goalLat = intent.getDoubleExtra("goalLat", 0);
+        goalLng = intent.getDoubleExtra("goalLng", 0);
 
         if (trafficOption.equals("trafast")) {
             guideCount = getTrafficData.getRoute().getTrafast().get(0).getGuide().size();
@@ -588,7 +605,7 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
             guideIndex++;
         }
 
-        if (firstDistance < 20 && guideIndex == guideCount - 1) {
+        if (firstDistance < 20 && guideIndex == guideCount) {
             finishGuide();
         }
     }
@@ -612,6 +629,61 @@ public class Navigation extends AppCompatActivity implements OnMapReadyCallback 
         int distance = (int) firstLocation.distanceTo(secondLocation);
 
         return distance;
+    }
+
+    private void realtimeTraffic() {
+        ServiceAPI getRealTimeTraffic = RetrofitClient.getClient().create(ServiceAPI.class);
+
+        String start = preLng + "," + preLat;
+        String goal = goalLng + "," + goalLat;
+
+        getRealTimeTraffic.getRoutes(start, goal, trafficOption).enqueue(new Callback<TrafficData>() {
+            @Override
+            public void onResponse(Call<TrafficData> call, Response<TrafficData> response) {
+                Log.v(TAG, "성공");
+                TrafficData trafficData = response.body();
+
+                if (trafficOption.equals("trafast")) {
+                    realTimeDistance = trafficData.getRoute().getTrafast().get(0).getSummary().getDistance();
+                    realTimeDuration = trafficData.getRoute().getTrafast().get(0).getSummary().getDuration() / 1000;
+                }
+                else if (trafficOption.equals("tracomfort")) {
+                    realTimeDistance = trafficData.getRoute().getTracomfort().get(0).getSummary().getDistance();
+                    realTimeDuration = trafficData.getRoute().getTracomfort().get(0).getSummary().getDuration() / 1000;
+                }
+                else {
+                    realTimeDistance = trafficData.getRoute().getTraoptimal().get(0).getSummary().getDistance();
+                    realTimeDuration = trafficData.getRoute().getTraoptimal().get(0).getSummary().getDuration() / 1000;
+                }
+
+                if (realTimeDistance >= 1000) {
+                    realTimeDistance = realTimeDistance / 1000;
+                    viewDistance.setText(realTimeDistance + " km");
+                }
+                else {
+                    viewDistance.setText(realTimeDistance + " m");
+                }
+
+                if (realTimeDuration >= 3600) {
+                    totalHour = realTimeDuration / 60 / 60;
+                    totalMinute = realTimeDuration / 60 % 60;
+                    viewDuration.setText(totalHour + " 시간 " + totalMinute + " 분");
+                }
+                else if (realTimeDuration >= 60) {
+                    totalMinute = realTimeDuration / 60;
+                    viewDuration.setText(totalMinute + " 분");
+                }
+                else {
+                    viewDuration.setText("1분");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<TrafficData> call, Throwable t) {
+                Log.v(TAG, "실패");
+            }
+        });
     }
 
 }
