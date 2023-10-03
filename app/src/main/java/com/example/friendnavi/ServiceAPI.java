@@ -46,4 +46,8 @@ public interface ServiceAPI {
     Call<String> kakaoJoin(@Field("id") String id,
                            @Field("nickname") String nickname);
 
+    @GET("addRoom.php")
+    Call<String> addRoom(@Query("checkRoom") String checkRoom,
+                         @Query("nickname") String nickname);
+
 }
