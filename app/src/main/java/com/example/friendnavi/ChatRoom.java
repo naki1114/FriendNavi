@@ -66,6 +66,7 @@ public class ChatRoom extends AppCompatActivity {
         Log.v(TAG, "onStart 호출");
 
         clickBtnSend();
+        clickBtnBack();
     }
 
     @Override
@@ -198,6 +199,21 @@ public class ChatRoom extends AppCompatActivity {
         public void run() {
             chattingView.setText(chattingView.getText().toString() + msg + "\n");
         }
+    }
+
+    public void clickBtnBack() {
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toMain();
+            }
+        });
+    }
+
+    public void toMain() {
+        Intent toMainActivity = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(toMainActivity);
+        finish();
     }
 
 }
