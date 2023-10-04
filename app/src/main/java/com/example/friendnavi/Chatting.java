@@ -23,7 +23,6 @@ import retrofit2.Response;
 public class Chatting extends Fragment {
 
     String TAG = "F_채팅 페이지";
-    private final String CHECKING = "checking";
 
     Context context;
 
@@ -155,7 +154,7 @@ public class Chatting extends Fragment {
     public void addChatRoom() {
         nickname = "나킈";
         checkChatRoom = RetrofitClient.getClient().create(ServiceAPI.class);
-        checkChatRoom.addRoom(CHECKING, nickname).enqueue(new Callback<String>() {
+        checkChatRoom.addRoom(nickname).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 roomNo = response.body();
