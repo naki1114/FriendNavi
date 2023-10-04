@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -61,6 +62,13 @@ public class ChatRoom extends AppCompatActivity {
     String roomNumber;
     String roomName;
 
+    boolean type;
+
+    String myNick;
+    String otherNick;
+
+    SharedPreferences getNickname;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +79,7 @@ public class ChatRoom extends AppCompatActivity {
         getRoomData();
         initRetrofit();
         initChattingView();
+        getUserNickname();
     }
 
     @Override
@@ -145,6 +154,10 @@ public class ChatRoom extends AppCompatActivity {
         chattingAPI = RetrofitClient.getClient().create(ServiceAPI.class);
     }
 
+    public void getUserNickname() {
+        getNickname = getSharedPreferences("USER_INFO", MODE_PRIVATE);
+        myNick = getNickname.getString("Nickname", "");
+    }
 
     public void getRoomData() {
         Intent getData = getIntent();
@@ -192,7 +205,7 @@ public class ChatRoom extends AppCompatActivity {
                         super.run();
                         try {
 //                            sendWriter.println(roomNumber + "!!!###@@@!!!" + sendmsg);
-                            sendWriter.println(roomName + "!!!###@@@!!!" + sendmsg);
+                            sendWriter.println(roomName + "!!!###@@@!!!" + myNick + "!!!###@@@!!!" + sendmsg);
                             sendWriter.flush();
                             chat.setText("");
                         }
@@ -247,7 +260,7 @@ public class ChatRoom extends AppCompatActivity {
         SimpleDateFormat dataFormat = new SimpleDateFormat();
 
         String currentTime = dataFormat.format(System.currentTimeMillis());
-        chattingAPI.saveChatting(roomNumber, currentTime, "나킈", sendmsg).enqueue(new Callback<String>() {
+        chattingAPI.saveChatting(roomNumber, currentTime, myNick, sendmsg).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 Log.v(TAG, "성공 : " + response.body());
@@ -266,7 +279,16 @@ public class ChatRoom extends AppCompatActivity {
         String[] time = dataFormat.format(System.currentTimeMillis()).split(" ");
         String currentTime = time[1] + " " + time[2];
 
-        ChattingData chattingData = new ChattingData(currentTime, msg, false);
+        String[] content = msg.split("!!!###@@@!!!");
+
+        if (content[0].equals(myNick)) {
+            type = false;
+        }
+        else {
+            type = true;
+        }
+
+        ChattingData chattingData = new ChattingData(currentTime, content[1], type);
         chattingList.add(chattingData);
         chattingAdapter.notifyDataSetChanged();
     }
