@@ -17,6 +17,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChatRoom extends AppCompatActivity {
 
@@ -25,6 +30,8 @@ public class ChatRoom extends AppCompatActivity {
     Socket socket;
     InetAddress serverAddr;
     PrintWriter sendWriter;
+
+    ServiceAPI chattingAPI;
 
     ImageButton btnBack;
     ImageButton btnOption;
@@ -57,6 +64,7 @@ public class ChatRoom extends AppCompatActivity {
         initView();
         getRoomData();
         setSocket();
+        initRetrofit();
 
     }
 
@@ -118,6 +126,11 @@ public class ChatRoom extends AppCompatActivity {
         chatHandler = new Handler();
     }
 
+    public void initRetrofit() {
+        chattingAPI = RetrofitClient.getClient().create(ServiceAPI.class);
+    }
+
+
     public void getRoomData() {
         Intent getData = getIntent();
         roomName = getData.getStringExtra("roomName");
@@ -159,6 +172,7 @@ public class ChatRoom extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 sendmsg = chat.getText().toString();
+                saveChatContent();
                 new Thread() {
                     @Override
                     public void run() {
@@ -214,6 +228,23 @@ public class ChatRoom extends AppCompatActivity {
         Intent toMainActivity = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(toMainActivity);
         finish();
+    }
+
+    public void saveChatContent() {
+        SimpleDateFormat dataFormat = new SimpleDateFormat();
+
+        String currentTime = dataFormat.format(System.currentTimeMillis());
+        chattingAPI.saveChatting(roomNumber, currentTime, "나킈", sendmsg).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.v(TAG, "성공 : " + response.body());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.v(TAG, "실패 : " + t.getMessage());
+            }
+        });
     }
 
 }

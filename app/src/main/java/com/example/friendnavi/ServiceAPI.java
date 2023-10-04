@@ -49,4 +49,10 @@ public interface ServiceAPI {
     @GET("addRoom.php")
     Call<String> addRoom(@Query("nickname") String nickname);
 
+    @GET("chatting.php")
+    Call<String> saveChatting(@Query("roomNo") String roomNo,
+                              @Query("time") String time,
+                              @Query("sendUser") String sendUser,
+                              @Query("content") String content);
+
 }
