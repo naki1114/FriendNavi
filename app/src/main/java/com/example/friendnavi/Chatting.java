@@ -60,6 +60,7 @@ public class Chatting extends Fragment {
 
         clickAddChatRoom(view);
         initRoomList(view);
+        initRetrofit();
 
         return view;
     }
@@ -136,6 +137,10 @@ public class Chatting extends Fragment {
         roomListView.setAdapter(roomListAdapter);
     }
 
+    public void initRetrofit() {
+        checkChatRoom = RetrofitClient.getClient().create(ServiceAPI.class);
+    }
+
     // onClick Method
 
     public void clickAddChatRoom(View view) {
@@ -153,7 +158,7 @@ public class Chatting extends Fragment {
 
     public void addChatRoom() {
         nickname = "나킈";
-        checkChatRoom = RetrofitClient.getClient().create(ServiceAPI.class);
+
         checkChatRoom.addRoom(nickname).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
