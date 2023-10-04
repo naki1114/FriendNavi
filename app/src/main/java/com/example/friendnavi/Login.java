@@ -216,6 +216,7 @@ public class Login extends AppCompatActivity {
                             String result = response.body();
                             if(result.equals("카카오 유저 회원가입 완료") || result.equals("이미 존재하는 아이디 입니다.")) {
                                 Log.v(TAG, "카카오 유저 회원가입 완료");
+                                userID = kakaoId;
                                 nickname = kakaoNickname;
                                 userGroup = "Kakao";
                             }
@@ -241,7 +242,9 @@ public class Login extends AppCompatActivity {
         SharedPreferences saveUserInfo = getSharedPreferences("USER_INFO", MODE_PRIVATE);
         SharedPreferences.Editor editor = saveUserInfo.edit();
 
-        userID = getID;
+        if (!userGroup.equals("Kakao")) {
+            userID = getID;
+        }
 
         editor.putString("UserID", userID);
         editor.putString("Nickname", nickname);
