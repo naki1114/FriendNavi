@@ -65,7 +65,6 @@ public class ChatRoom extends AppCompatActivity {
     boolean type;
 
     String myNick;
-    String otherNick;
 
     SharedPreferences getNickname;
 
@@ -148,6 +147,39 @@ public class ChatRoom extends AppCompatActivity {
 
         chattingAdapter = new ChattingAdapter(chattingList);
         chattingView.setAdapter(chattingAdapter);
+        Log.v(TAG, roomNumber);
+
+        chattingAPI.getChattingData(roomNumber).enqueue(new Callback<ArrayList<ChattingDataFromServer>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ChattingDataFromServer>> call, Response<ArrayList<ChattingDataFromServer>> response) {
+                ArrayList<ChattingDataFromServer> result = new ArrayList<>();
+                result = response.body();
+                if (result.size() > 0) {
+                    for (int i = 0; i < result.size(); i++) {
+                        String[] time = result.get(i).getSavedTime().split(" ");
+                        String getTime = time[1] + time[2];
+                        String getMsg = result.get(i).getSavedContent();
+                        boolean getType;
+
+                        if (result.get(i).getSendUser().equals(myNick)) {
+                            getType = false;
+                        }
+                        else {
+                            getType = true;
+                        }
+
+                        ChattingData chattingData = new ChattingData(getTime, getMsg, getType);
+                        chattingList.add(chattingData);
+                        chattingAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ChattingDataFromServer>> call, Throwable t) {
+                Log.v(TAG, "naki : 실패");
+            }
+        });
     }
 
     public void initRetrofit() {

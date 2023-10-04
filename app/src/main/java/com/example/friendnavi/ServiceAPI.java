@@ -1,5 +1,6 @@
 package com.example.friendnavi;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import retrofit2.Call;
@@ -54,5 +55,8 @@ public interface ServiceAPI {
                               @Query("time") String time,
                               @Query("sendUser") String sendUser,
                               @Query("content") String content);
+
+    @GET("chatting.php")
+    Call<ArrayList<ChattingDataFromServer>> getChattingData(@Query("roomNo") String roomNo);
 
 }
