@@ -36,7 +36,7 @@ public class Chatting extends Fragment {
     private ArrayList<RoomListData> roomList;
     private RoomListAdapter roomListAdapter;
 
-    int a = 1;
+    int count = 1;
 
     @Override
     public void onAttach(Context context) {
@@ -147,12 +147,12 @@ public class Chatting extends Fragment {
         btnAddRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addChatRoom(a);
+                addChatRoom();
             }
         });
     }
 
-    public void addChatRoom(int count) {
+    public void addChatRoom() {
         nickname = "나킈";
         checkChatRoom = RetrofitClient.getClient().create(ServiceAPI.class);
         checkChatRoom.addRoom(CHECKING, nickname).enqueue(new Callback<String>() {
@@ -160,8 +160,8 @@ public class Chatting extends Fragment {
             public void onResponse(Call<String> call, Response<String> response) {
                 roomNo = response.body();
                 Log.v(TAG, roomNo);
-                addRoomItem(roomNo, "room" + a, "내용", "시간");
-                a++;
+                addRoomItem(roomNo, "room" + count, "내용", "시간");
+                count++;
             }
 
             @Override
