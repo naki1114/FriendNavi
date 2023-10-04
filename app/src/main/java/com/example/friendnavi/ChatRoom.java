@@ -1,6 +1,8 @@
 package com.example.friendnavi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,7 +43,10 @@ public class ChatRoom extends AppCompatActivity {
 
     TextView roomNameView;
 
-    TextView chattingView;
+    RecyclerView chattingView;
+
+    ArrayList<ChattingData> chattingList;
+    ChattingAdapter chattingAdapter;
 
     EditText chat;
 
@@ -65,7 +71,7 @@ public class ChatRoom extends AppCompatActivity {
         getRoomData();
         setSocket();
         initRetrofit();
-
+        initChattingView();
     }
 
     @Override
@@ -119,11 +125,20 @@ public class ChatRoom extends AppCompatActivity {
 
         roomNameView = findViewById(R.id.chatRoomTitle);
 
-        chattingView = findViewById(R.id.chattingView);
-
         chat = findViewById(R.id.chat);
 
         chatHandler = new Handler();
+    }
+
+    public void initChattingView() {
+        chattingView = findViewById(R.id.chattingView);
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        chattingView.setLayoutManager(mLinearLayoutManager);
+
+        chattingList = new ArrayList<>();
+
+        chattingAdapter = new ChattingAdapter(chattingList);
+        chattingView.setAdapter(chattingAdapter);
     }
 
     public void initRetrofit() {
@@ -211,7 +226,7 @@ public class ChatRoom extends AppCompatActivity {
 
         @Override
         public void run() {
-            chattingView.setText(chattingView.getText().toString() + msg + "\n");
+            setChatting(msg);
         }
     }
 
@@ -245,6 +260,17 @@ public class ChatRoom extends AppCompatActivity {
                 Log.v(TAG, "실패 : " + t.getMessage());
             }
         });
+    }
+
+    public void setChatting(String msg) {
+        SimpleDateFormat dataFormat = new SimpleDateFormat();
+
+        String[] time = dataFormat.format(System.currentTimeMillis()).split(" ");
+        String currentTime = time[1] + " " + time[2];
+
+        ChattingData chattingData = new ChattingData(currentTime, msg, false);
+        chattingList.add(chattingData);
+        chattingAdapter.notifyDataSetChanged();
     }
 
 }
