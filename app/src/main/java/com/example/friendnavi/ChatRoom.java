@@ -69,7 +69,6 @@ public class ChatRoom extends AppCompatActivity {
 
         initView();
         getRoomData();
-        setSocket();
         initRetrofit();
         initChattingView();
     }
@@ -79,6 +78,7 @@ public class ChatRoom extends AppCompatActivity {
         super.onStart();
         Log.v(TAG, "onStart 호출");
 
+        setSocket();
         clickBtnSend();
         clickBtnBack();
     }
@@ -164,11 +164,9 @@ public class ChatRoom extends AppCompatActivity {
 //                    sendWriter.println(roomNumber);
                     sendWriter.println(roomName);
                     sendWriter.flush();
-                    Log.v(TAG, roomNumber);
                     BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     while(true) {
                         read = input.readLine();
-                        Log.v(TAG, read);
 
                         if (read != null) {
                             chatHandler.post(new MsgUpdate(read));
