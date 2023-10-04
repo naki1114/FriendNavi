@@ -5,21 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="15dp"
-    android:background="@color/white"
+    android:paddingTop="15dp"
+    android:background="@color/skyblue"
     tools:context=".ChatRoom">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
 
         <ImageButton
             android:id="@+id/btnBack"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
             android:src="@drawable/backbutton"
             android:scaleType="fitCenter"
-            android:background="@color/white"
+            android:background="@color/skyblue"
             android:contentDescription="@string/btn" />
 
         <TextView
@@ -38,34 +41,32 @@
             android:layout_height="50dp"
             android:src="@drawable/list"
             android:scaleType="fitCenter"
-            android:background="@color/white"
+            android:background="@color/skyblue"
             android:contentDescription="@string/btn" />
 
     </LinearLayout>
 
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/chattingView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_weight="1"/>-->
-
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chattingView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp" />
 
     <LinearLayout
         android:id="@+id/chatWidget"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
+        android:padding="5dp"
+        android:background="@color/white"
         android:orientation="horizontal" >
 
         <ImageButton
             android:id="@+id/btnLocate"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/locate"
+            android:src="@drawable/sample"
             android:scaleType="fitCenter"
             android:background="@color/white"
             android:contentDescription="@string/btn" />
