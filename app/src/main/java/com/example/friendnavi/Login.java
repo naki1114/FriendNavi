@@ -3,6 +3,7 @@ package com.example.friendnavi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -38,6 +39,10 @@ public class Login extends AppCompatActivity {
     String getID;
     String getPW;
 
+    String userID;
+    String nickname;
+    String userGroup;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +67,7 @@ public class Login extends AppCompatActivity {
             @Override
             public Unit invoke(OAuthToken oAuthToken, Throwable throwable) {
                 updateKakaoLoginUi();
+                saveUserInfoToShared();
                 toMain();
                 return null;
             }
@@ -159,11 +165,14 @@ public class Login extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 String result = response.body();
-                if(result.equals("로그인 되었습니다.")) {
-                    toMain();
+                if(result.equals("회원정보가 일치하지 않습니다.") || result.equals("아이디 또는 비밀번호를 입력해주세요.")) {
+                    Toast.makeText(Login.this, result, Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(Login.this, result, Toast.LENGTH_SHORT).show();
+                    nickname = result;
+                    userGroup = "FN";
+                    saveUserInfoToShared();
+                    toMain();
                 }
             }
 
@@ -207,6 +216,8 @@ public class Login extends AppCompatActivity {
                             String result = response.body();
                             if(result.equals("카카오 유저 회원가입 완료") || result.equals("이미 존재하는 아이디 입니다.")) {
                                 Log.v(TAG, "카카오 유저 회원가입 완료");
+                                nickname = kakaoNickname;
+                                userGroup = "Kakao";
                             }
                             else {
                                 Toast.makeText(Login.this, result, Toast.LENGTH_SHORT).show();
@@ -224,6 +235,18 @@ public class Login extends AppCompatActivity {
                 return null;
             }
         });
+    }
+
+    public void saveUserInfoToShared() {
+        SharedPreferences saveUserInfo = getSharedPreferences("USER_INFO", MODE_PRIVATE);
+        SharedPreferences.Editor editor = saveUserInfo.edit();
+
+        userID = getID;
+
+        editor.putString("UserID", userID);
+        editor.putString("Nickname", nickname);
+        editor.putString("UserGroup", userGroup);
+        editor.commit();
     }
 
 }
