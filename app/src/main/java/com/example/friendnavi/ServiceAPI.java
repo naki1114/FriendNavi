@@ -59,4 +59,11 @@ public interface ServiceAPI {
     @GET("chatting.php")
     Call<ArrayList<ChattingDataFromServer>> getChattingData(@Query("roomNo") String roomNo);
 
+    @GET("addFriend.php")
+    Call<String> checkFriend(@Query("my") String my,
+                             @Query("friend") String friend);
+
+    @GET("setFriend.php")
+    Call<ArrayList<FriendData>> getFriendData(@Query("myNickname") String myNickname);
+
 }
