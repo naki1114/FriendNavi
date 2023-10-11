@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -41,6 +43,7 @@ public class ChatRoom extends AppCompatActivity {
     ImageButton btnOption;
     ImageButton btnLocate;
     ImageButton btnSend;
+    ImageButton btnSend2;
 
     TextView roomNameView;
 
@@ -90,6 +93,7 @@ public class ChatRoom extends AppCompatActivity {
         setSocket();
         clickBtnSend();
         clickBtnBack();
+        changeButton();
     }
 
     @Override
@@ -131,6 +135,7 @@ public class ChatRoom extends AppCompatActivity {
         btnOption = findViewById(R.id.btnOption);
         btnLocate = findViewById(R.id.btnLocate);
         btnSend = findViewById(R.id.btnSend);
+        btnSend2 = findViewById(R.id.btnSend2);
 
         roomNameView = findViewById(R.id.chatRoomTitle);
 
@@ -254,6 +259,8 @@ public class ChatRoom extends AppCompatActivity {
                         }
                     }
                 }.start();
+                btnSend2.setVisibility(View.VISIBLE);
+                btnSend.setVisibility(View.GONE);
             }
         });
     }
@@ -331,6 +338,32 @@ public class ChatRoom extends AppCompatActivity {
         ChattingData chattingData = new ChattingData(currentTime, content[1], type);
         chattingList.add(chattingData);
         chattingAdapter.notifyDataSetChanged();
+    }
+
+    public void changeButton() {
+        chat.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (chat.getText().toString().equals("")) {
+                    btnSend.setVisibility(View.GONE);
+                    btnSend2.setVisibility(View.VISIBLE);
+                }
+                else {
+                    btnSend2.setVisibility(View.GONE);
+                    btnSend.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
 }
