@@ -25,7 +25,8 @@
             android:gravity="left|center"
             android:hint="@string/content"
             android:textSize="15dp"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textAlignment="center" />
 
     </LinearLayout>
 
