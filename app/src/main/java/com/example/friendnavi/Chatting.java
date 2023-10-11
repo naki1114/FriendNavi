@@ -157,6 +157,7 @@ public class Chatting extends Fragment {
     }
 
     public void addChatRoom() {
+        // 내 닉네임 + 상대 닉네임
         nickname = "나킈";
 
         checkChatRoom.addRoom(nickname).enqueue(new Callback<String>() {

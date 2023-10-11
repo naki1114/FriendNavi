@@ -41,6 +41,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.RoomLi
                     Intent toChatRoom = new Intent(context, ChatRoom.class);
                     toChatRoom.putExtra("roomNumber", roomNumber);
                     toChatRoom.putExtra("roomName", roomName);
+                    toChatRoom.putExtra("roomType", "chatting");
                     context.startActivity(toChatRoom);
                 }
             });

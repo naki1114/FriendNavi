@@ -61,6 +61,7 @@ public class ChatRoom extends AppCompatActivity {
 
     String roomNumber;
     String roomName;
+    String roomType;
 
     boolean type;
 
@@ -147,7 +148,6 @@ public class ChatRoom extends AppCompatActivity {
 
         chattingAdapter = new ChattingAdapter(chattingList);
         chattingView.setAdapter(chattingAdapter);
-        Log.v(TAG, roomNumber);
 
         chattingAPI.getChattingData(roomNumber).enqueue(new Callback<ArrayList<ChattingDataFromServer>>() {
             @Override
@@ -193,7 +193,15 @@ public class ChatRoom extends AppCompatActivity {
 
     public void getRoomData() {
         Intent getData = getIntent();
-        roomName = getData.getStringExtra("roomName");
+
+        roomType = getData.getStringExtra("roomType");
+
+        if (roomType.equals("chatting")) {
+            roomName = getData.getStringExtra("roomName");
+        }
+        else if (roomType.equals("friend")) {
+            roomName = getData.getStringExtra("friend");
+        }
         roomNumber = getData.getStringExtra("roomNumber");
 
         roomNameView.setText(roomName);
