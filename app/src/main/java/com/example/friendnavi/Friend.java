@@ -218,7 +218,7 @@ public class Friend extends Fragment {
 
     public void addFriend() {
         FriendListData friendData = new FriendListData(result);
-        friendList.add(friendData);
+        friendList.add(0, friendData);
         friendListAdapter.notifyDataSetChanged();
     }
 
